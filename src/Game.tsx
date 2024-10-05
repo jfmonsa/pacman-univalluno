@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from "./game.module.css";
 import { useKermit } from "./hooks/useKermit";
 import { usePiggy } from "./hooks/usePiggy";
 import { useBoard } from "./hooks/useBoard";
@@ -48,12 +49,15 @@ function Game() {
   const handleSimulation = () => setIsSimulating(!isSimulating);
 
   return (
-    <div>
-      <div className="game-board">
+    <main>
+      <div className={styles.gameBoard}>
         {board.map((row: string[], rowIndex: number) => (
-          <div key={rowIndex} className="row">
+          <div key={rowIndex} className={styles.row}>
             {row.map((cell: string, colIndex: number) => (
-              <div key={colIndex} className={`cell ${cell}`}>
+              <div
+                key={colIndex}
+                className={`${styles.cell} ${styles[cell]}`} // Aplica estilos dinámicos
+              >
                 {cell !== "empty" && (
                   <img src={`src/assets/${cell}.svg`} alt={cell} />
                 )}
@@ -62,8 +66,10 @@ function Game() {
           </div>
         ))}
       </div>
-      <button onClick={handleSimulation}>Start Simulation</button>
-    </div>
+      <button className={styles.button} onClick={handleSimulation}>
+        Start Simulation
+      </button>
+    </main>
   );
 }
 
