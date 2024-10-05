@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import { useKermit } from "./hooks/useKermit";
+import { usePiggy } from "./hooks/usePiggy";
+import { useBoard } from "./hooks/useBoard";
+
+// TODO: implementar types en ./types para poder reutilizarlos
 
 const initialBoard = [
   ["empty", "empty", "empty", "empty", "kermit"],
@@ -7,48 +12,57 @@ const initialBoard = [
 ];
 
 function Game() {
-  const [board, setBoard] = useState(initialBoard);
-  const [kermitPosition, setKermitPosition] = useState({ x: 0, y: 4 });
-  const [piggyPosition, setPiggyPosition] = useState({ x: 2, y: 3 });
-  const [elmoPosition] = useState({ x: 2, y: 0 });
-  const [cookiePosition] = useState({ x: 1, y: 2 });
+  const elmoPosition = { x: 2, y: 0 };
+  const [isSimulating, setIsSimulating] = useState(false);
 
-  // Movimiento de René (Búsqueda limitada por profundidad)
+  // Usa los hooks para gestionar a Kermit y Piggy
+  const { position: kermitPosition, moveToElmo } = useKermit(
+    { x: 0, y: 4 },
+    initialBoard,
+    elmoPosition
+  );
+  const { position: piggyPosition, moveToKermit } = usePiggy(
+    { x: 2, y: 3 },
+    initialBoard,
+    kermitPosition
+  );
+
+  const { board, updateBoard } = useBoard(
+    initialBoard,
+    kermitPosition,
+    piggyPosition,
+    elmoPosition
+  );
+
+  // Simula el movimiento de Kermit y Piggy
   useEffect(() => {
-    const moveKermit = () => {
-      // Implementa el algoritmo de búsqueda limitada por profundidad
-      // Modifica la posición de Kermit y actualiza el tablero
-    };
-
-    const interval = setInterval(moveKermit, 1000); // Mueve a René cada segundo
+    if (!isSimulating) return;
+    const interval = setInterval(() => {
+      moveToElmo();
+      moveToKermit();
+      updateBoard();
+    }, 1000);
     return () => clearInterval(interval);
-  }, [kermitPosition]);
+  }, [isSimulating, moveToElmo, moveToKermit, updateBoard]);
 
-  // Movimiento de Piggy (Búsqueda por amplitud + probabilidad de usar A*)
-  useEffect(() => {
-    const movePiggy = () => {
-      // Implementa el algoritmo de búsqueda por amplitud
-      // Con probabilidad de 40% cambia a A* y modifica la posición de Piggy
-    };
+  const handleSimulation = () => setIsSimulating(!isSimulating);
 
-    const interval = setInterval(movePiggy, 1000); // Mueve a Piggy cada segundo
-    return () => clearInterval(interval);
-  }, [piggyPosition]);
-
-  // Renderiza el tablero
   return (
-    <div className="game-board">
-      {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="row">
-          {row.map((cell, colIndex) => (
-            <div key={colIndex} className={`cell ${cell}`}>
-              {cell !== "empty" && (
-                <img src={`/images/${cell}.png`} alt={cell} />
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+    <div>
+      <div className="game-board">
+        {board.map((row: string[], rowIndex: number) => (
+          <div key={rowIndex} className="row">
+            {row.map((cell: string, colIndex: number) => (
+              <div key={colIndex} className={`cell ${cell}`}>
+                {cell !== "empty" && (
+                  <img src={`src/assets/${cell}.svg`} alt={cell} />
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <button onClick={handleSimulation}>Start Simulation</button>
     </div>
   );
 }
