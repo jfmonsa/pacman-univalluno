@@ -8,8 +8,9 @@ import { useBoard } from "./hooks/useBoard";
 
 const initialBoard = [
   ["empty", "empty", "empty", "empty", "kermit"],
-  ["empty", "empty", "cookie", "empty", "empty"],
-  ["elmo", "empty", "empty", "piggy", "empty"],
+  ["empty", "cookie", "wall", "empty", "empty"],
+  ["elmo", "wall", "wall", "piggy", "empty"],
+  ["empty", "wall", "empty", "empty", "empty"],
 ];
 
 function Game() {
@@ -54,11 +55,8 @@ function Game() {
         {board.map((row: string[], rowIndex: number) => (
           <div key={rowIndex} className={styles.row}>
             {row.map((cell: string, colIndex: number) => (
-              <div
-                key={colIndex}
-                className={`${styles.cell} ${styles[cell]}`} // Aplica estilos dinámicos
-              >
-                {cell !== "empty" && (
+              <div key={colIndex} className={`${styles.cell} ${styles[cell]}`}>
+                {(cell !== "empty" && cell !== "wall") && (
                   <img src={`src/assets/${cell}.svg`} alt={cell} />
                 )}
               </div>

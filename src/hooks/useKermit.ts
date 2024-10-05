@@ -1,32 +1,34 @@
 import { useEffect, useState } from "react";
 import { useAgent } from "./useAgent";
+import { depthLimitedDFS } from "../algos/dfsLimited";
 
 export function useKermit(
   initialPosition: { x: number; y: number },
   board: string[][],
   elmoPosition: { x: number; y: number }
 ) {
-  const { position, getValidMoves, move } = useAgent(initialPosition, board);
+  const { position, move } = useAgent(initialPosition, board);
   const [hasCookieBoost, setHasCookieBoost] = useState(false);
+  const DEPTH_LIMIT = 13;
 
   useEffect(() => {
-    // Check if Kermit steps on the cookie
+    // Verifica si Kermit está en la posición de la cookie
     if (board[position.x][position.y] === "cookie") {
       setHasCookieBoost(true);
     }
   }, [position, board]);
 
   const moveToElmo = () => {
-    const validMoves = getValidMoves();
-    // Implementación básica de búsqueda limitada por profundidad
-    for (const movePos of validMoves) {
-      if (movePos.x === elmoPosition.x && movePos.y === elmoPosition.y) {
-        move(movePos); // Mueve a Kermit hacia Elmo
-        return;
-      }
+    // Ejecuta DFS limitado por profundidad para encontrar el camino hacia Elmo
+    const path = depthLimitedDFS(board, position, elmoPosition, DEPTH_LIMIT);
+
+    // Si encuentra un camino, mueve a Kermit al siguiente paso en el camino
+    if (path && path.length > 1) {
+      console.log(path);
+      move(path[1]); // Mueve a la siguiente posición en el camino
+    } else {
+      console.log("No se encontró un camino hacia Elmo");
     }
-    // Movimiento aleatorio si no está en elmoPosition
-    move(validMoves[Math.floor(Math.random() * validMoves.length)]);
   };
 
   return { position, moveToElmo, hasCookieBoost };

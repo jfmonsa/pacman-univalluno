@@ -43,6 +43,10 @@
   background-color: #fff;
 }
 
+.cell.wall {
+  background-color: #312c2cd3;
+}
+
 /* Estilos para las imágenes de los personajes */
 .cell img {
   width: 30px;
