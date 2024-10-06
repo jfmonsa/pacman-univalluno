@@ -5,6 +5,7 @@ import { usePiggy } from "./hooks/usePiggy";
 import { useBoard } from "./hooks/useBoard";
 
 // TODO: implementar types en ./types para poder reutilizarlos
+// TODO: la configuración iniciald del tablero 2 opciones: 1. random, 2. arrastrando
 
 const initialBoard = [
   ["empty", "empty", "empty", "empty", "kermit"],
@@ -56,7 +57,7 @@ function Game() {
           <div key={rowIndex} className={styles.row}>
             {row.map((cell: string, colIndex: number) => (
               <div key={colIndex} className={`${styles.cell} ${styles[cell]}`}>
-                {(cell !== "empty" && cell !== "wall") && (
+                {cell !== "empty" && cell !== "wall" && (
                   <img src={`src/assets/${cell}.svg`} alt={cell} />
                 )}
               </div>
@@ -65,7 +66,7 @@ function Game() {
         ))}
       </div>
       <button className={styles.button} onClick={handleSimulation}>
-        Start Simulation
+        {isSimulating ? "Stop Simulation" : "Start Simulation"}
       </button>
     </main>
   );
