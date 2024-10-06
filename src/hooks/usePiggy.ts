@@ -1,39 +1,39 @@
 import { useEffect, useState } from "react";
 import { useAgent } from "./useAgent";
+import { bfs } from "../algos/bfs";
 
 export function usePiggy(
   initialPosition: { x: number; y: number },
   board: string[][],
   kermitPosition: { x: number; y: number }
 ) {
-  const { position, getValidMoves, move } = useAgent(initialPosition, board);
+  const { position, move } = useAgent(initialPosition, board);
   const [useAStar, setUseAStar] = useState(false);
 
   useEffect(() => {
     // Cada turno, Piggy tiene un 40% de probabilidad de cambiar a A*
     const chance = Math.random();
     if (chance < 0.4) {
-      setUseAStar(true);
+      //setUseAStar(true);
     } else {
       setUseAStar(false);
     }
   }, [position]);
 
   const moveToKermit = () => {
-    const validMoves = getValidMoves();
-    // Si Piggy está usando A*, moverla hacia Kermit
+    // Si Piggy está usando A*, moverla hacia Kermit (Puedes implementar A* aquí)
     if (useAStar) {
-      // Aquí puedes implementar la lógica de A* si lo deseas
       console.log("Piggy está usando A*");
     } else {
-      // Implementación básica de búsqueda por amplitud
-      for (const movePos of validMoves) {
-        if (movePos.x === kermitPosition.x && movePos.y === kermitPosition.y) {
-          move(movePos); // Mueve a Piggy hacia Kermit
-          return;
-        }
+      // Implementa la búsqueda en amplitud (BFS) para encontrar a Kermit
+      const path = bfs(board, position, kermitPosition);
+
+      // Si se encuentra un camino, mueve a Piggy al siguiente paso
+      if (path && path.length > 1) {
+        move(path[1]); // Mueve a Piggy al siguiente paso del camino
+      } else {
+        console.warn("No se encontró un camino hacia Kermit.");
       }
-      move(validMoves[Math.floor(Math.random() * validMoves.length)]);
     }
   };
 
