@@ -14,6 +14,7 @@ export function usePiggy(
     // Cada turno, Piggy tiene un 40% de probabilidad de cambiar a A*
     const chance = Math.random();
     if (chance < 0.4) {
+      // TODO: implementar A*
       //setUseAStar(true);
     } else {
       setUseAStar(false);
