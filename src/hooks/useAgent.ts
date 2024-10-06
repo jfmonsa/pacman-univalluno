@@ -6,6 +6,7 @@ export function useAgent(
 ) {
   const [position, setPosition] = useState(initialPosition);
 
+  // TODO: realmente no estamos usando esta función eliminarla
   const getValidMoves = () => {
     const { x, y } = position;
     const moves = [];
