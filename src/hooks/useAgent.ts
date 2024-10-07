@@ -1,23 +1,25 @@
 import { useState } from "react";
+import { cellType, positionType } from "../utils/types";
+
 
 export function useAgent(
-  initialPosition: { x: number; y: number },
-  board: string[][]
+  initialPosition: positionType,
+  board: cellType[][]
 ) {
   const [position, setPosition] = useState(initialPosition);
 
   // TODO: realmente no estamos usando esta función eliminarla
   const getValidMoves = () => {
-    const { x, y } = position;
+    const { row, col } = position;
     const moves = [];
-    if (x > 0) moves.push({ x: x - 1, y });
-    if (x < board.length - 1) moves.push({ x: x + 1, y });
-    if (y > 0) moves.push({ x, y: y - 1 });
-    if (y < board[0].length - 1) moves.push({ x, y: y + 1 });
+    if (row > 0) moves.push({ row: row - 1, col });
+    if (row < board.length - 1) moves.push({ row: row + 1, col });
+    if (col > 0) moves.push({ row, col: col - 1 });
+    if (col < board[0].length - 1) moves.push({ row, col: col + 1 });
     return moves;
   };
 
-  const move = (newPosition: { x: number; y: number }) => {
+  const move = (newPosition: positionType) => {
     setPosition(newPosition);
   };
 

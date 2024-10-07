@@ -1,25 +1,26 @@
 import { useState } from "react";
+import { cellType, positionType } from "../utils/types";
 
 export function useBoard(
-  initialBoard: string[][],
-  kermitPosition: { x: number; y: number },
-  piggyPosition: { x: number; y: number },
-  elmoPosition: { x: number; y: number }
+  initialBoard: cellType[][],
+  kermitPosition: positionType,
+  piggyPosition: positionType,
+  elmoPosition: positionType
 ) {
   const [board, setBoard] = useState(initialBoard);
 
   const updateBoard = () => {
-    const newBoard = board.map((row: string[]) => row.slice()); // Crea una copia del tablero
+    const newBoard = board.map((row: cellType[]) => row.slice()); // Crea una copia del tablero
     // Limpia las posiciones anteriores de Kermit y Piggy
     for (const row of newBoard) {
-      row.forEach((cell: string, i: number) => {
+      row.forEach((cell: cellType, i: number) => {
         if (cell === "kermit" || cell === "piggy") row[i] = "empty";
       });
     }
     // Coloca a Kermit, Piggy y Elmo en las posiciones correctas
-    newBoard[kermitPosition.x][kermitPosition.y] = "kermit";
-    newBoard[piggyPosition.x][piggyPosition.y] = "piggy";
-    newBoard[elmoPosition.x][elmoPosition.y] = "elmo";
+    newBoard[kermitPosition.row][kermitPosition.col] = "kermit";
+    newBoard[piggyPosition.row][piggyPosition.col] = "piggy";
+    newBoard[elmoPosition.row][elmoPosition.col] = "elmo";
     setBoard(newBoard);
   };
 

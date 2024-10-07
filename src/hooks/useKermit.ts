@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
 import { useAgent } from "./useAgent";
 import { depthLimitedDFS } from "../algos/dfsLimited";
+import { cellType, positionType } from "../utils/types";
 
 export function useKermit(
-  initialPosition: { x: number; y: number },
-  board: string[][],
-  elmoPosition: { x: number; y: number }
+  initialPosition: positionType,
+  board: cellType[][],
+  elmoPosition: positionType
 ) {
   const { position, move } = useAgent(initialPosition, board);
   const [hasCookieBoost, setHasCookieBoost] = useState(false);
-  const [path, setPath] = useState<{ x: number; y: number }[]>([]); // Almacena el camino calculado
+  const [path, setPath] = useState<positionType[]>([]); // Almacena el camino calculado
   const [stepIndex, setStepIndex] = useState(0); // Índice para seguir el camino
   // TODO: obtener este valor en un slider, con 12 por defecto
   const DEPTH_LIMIT = 12;
 
   useEffect(() => {
     // Verifica si Kermit está en la posición de la cookie
-    if (board[position.x][position.y] === "cookie") {
+    if (board[position.row][position.col] === "cookie") {
       setHasCookieBoost(true);
     }
   }, [position, board]);
@@ -32,7 +33,7 @@ export function useKermit(
   useEffect(() => {
     // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
     const isAtElmo = () => {
-      return position.x === elmoPosition.x && position.y === elmoPosition.y;
+      return position.row === elmoPosition.row && position.col === elmoPosition.col;
     };
     if (path.length === 0 || stepIndex >= path.length || isAtElmo()) {
       const newPath = depthLimitedDFS(

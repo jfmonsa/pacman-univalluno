@@ -3,11 +3,12 @@ import styles from "./game.module.css";
 import { useKermit } from "./hooks/useKermit";
 import { usePiggy } from "./hooks/usePiggy";
 import { useBoard } from "./hooks/useBoard";
+import { cellType } from "./utils/types";
 
 // TODO: implementar types en ./types para poder reutilizarlos
 // TODO: la configuración iniciald del tablero 2 opciones: 1. random, 2. arrastrando
 
-const initialBoard = [
+const initialBoard : cellType[][] = [
   ["empty", "empty", "empty", "empty", "kermit"],
   ["empty", "cookie", "wall", "empty", "empty"],
   ["elmo", "wall", "wall", "piggy", "empty"],
@@ -15,17 +16,17 @@ const initialBoard = [
 ];
 
 function Game() {
-  const elmoPosition = { x: 2, y: 0 };
+  const elmoPosition = {row: 2, col: 0};
   const [isSimulating, setIsSimulating] = useState(false);
 
   // Usa los hooks para gestionar a Kermit y Piggy
   const { position: kermitPosition, moveToElmo } = useKermit(
-    { x: 0, y: 4 },
+    { row: 0, col: 4 },
     initialBoard,
     elmoPosition
   );
   const { position: piggyPosition, moveToKermit } = usePiggy(
-    { x: 2, y: 3 },
+    { row: 2, col: 3 },
     initialBoard,
     kermitPosition
   );

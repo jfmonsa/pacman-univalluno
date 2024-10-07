@@ -1,44 +1,42 @@
+import { cellType, positionType } from "../utils/types";
+import { operatorsOrder } from "./operatorsOrderConst";
+
 // Función de búsqueda en amplitud (BFS)
 export function bfs(
-  board: string[][],
-  start: { x: number; y: number },
-  goal: { x: number; y: number }
+  board: cellType[][],
+  start: positionType,
+  goal: positionType
 ) {
-  const directions = [
-    { x: -1, y: 0 }, // Arriba
-    { x: 0, y: 1 }, // Derecha
-    { x: 1, y: 0 }, // Abajo
-    { x: 0, y: -1 }, // Izquierda
-  ];
+
 
   const queue = [[start]]; // La cola almacena rutas completas
-  const visited = new Set([`${start.x},${start.y}`]);
+  const visited = new Set([`${start.row},${start.col}`]);
 
   while (queue.length > 0) {
     const path = queue.shift()!;
-    const { x, y } = path[path.length - 1];
+    const { row, col } = path[path.length - 1];
 
     // Si Piggy ha alcanzado a Kermit, retorna el camino
-    if (x === goal.x && y === goal.y) {
+    if (row === goal.row && col === goal.col) {
       return path;
     }
 
     // Explora las direcciones en el orden definido
-    for (const dir of directions) {
-      const newX = x + dir.x;
-      const newY = y + dir.y;
+    for (const dir of operatorsOrder) {
+      const newRow = row + dir.row;
+      const newCol = col + dir.col;
 
-      // Verifica los límites del tablero y evita obstáculos
+      // Verifica los límites del tablero col evita obstáculos
       if (
-        newX >= 0 &&
-        newX < board.length && // Límites de filas
-        newY >= 0 &&
-        newY < board[0].length && // Límites de columnas
-        !visited.has(`${newX},${newY}`) &&
-        board[newX][newY] !== "wall" // Evita muros
+        newRow >= 0 &&
+        newRow < board.length && // Límites de filas
+        newCol >= 0 &&
+        newCol < board[0].length && // Límites de columnas
+        !visited.has(`${newRow},${newCol}`) &&
+        board[newRow][newCol] !== "wall" // Evita muros
       ) {
-        visited.add(`${newX},${newY}`);
-        queue.push([...path, { x: newX, y: newY }]); // Agrega la nueva ruta a la cola
+        visited.add(`${newRow},${newCol}`);
+        queue.push([...path, { row: newRow, col: newCol }]); // Agrega la nueva ruta a la cola
       }
     }
   }

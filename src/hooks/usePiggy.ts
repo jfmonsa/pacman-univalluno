@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useAgent } from "./useAgent";
 import { bfs } from "../algos/bfs";
 import { aStar } from "../algos/aStar";
+import { cellType, positionType } from "../utils/types";
 
 export function usePiggy(
-  initialPosition: { x: number; y: number },
-  board: string[][],
-  kermitPosition: { x: number; y: number }
+  initialPosition: positionType,
+  board: cellType[][],
+  kermitPosition: positionType
 ) {
   const { position, move } = useAgent(initialPosition, board);
   const [useAStar, setUseAStar] = useState(false);
@@ -15,7 +16,7 @@ export function usePiggy(
 
   useEffect(() => {
     // Verifica si Kermit está en la posición de la cookie
-    if (board[position.x][position.y] === "cookie") {
+    if (board[position.row][position.col] === "cookie") {
       setHasCookieBoost(true);
     }
   }, [position, board]);

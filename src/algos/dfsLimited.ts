@@ -1,43 +1,38 @@
-// Movimientos en el orden Arriba, Derecha, Abajo, Izquierda
-const MOVES = [
-  { x: -1, y: 0 }, // Arriba
-  { x: 0, y: 1 }, // Derecha
-  { x: 1, y: 0 }, // Abajo
-  { x: 0, y: -1 }, // Izquierda
-];
+import { cellType, positionType } from "../utils/types";
+import { operatorsOrder } from "./operatorsOrderConst";
 
 // DFS limitado por profundidad
 export function depthLimitedDFS(
-  board: string[][],
-  start: { x: number; y: number },
-  goal: { x: number; y: number },
+  board: cellType[][],
+  start: positionType,
+  goal: positionType,
   depthLimit: number
-): { x: number; y: number }[] | null {
+): positionType[] | null {
   const visited = new Set<string>();
 
   // Convierte una posición a una cadena única para usar en Set
-  const posToString = (pos: { x: number; y: number }) => `${pos.x},${pos.y}`;
+  const posToString = (pos: { row: number; col: number }) => `${pos.row},${pos.col}`;
 
   function dfs(
-    current: { x: number; y: number },
+    current: { row: number; col: number },
     depth: number
-  ): { x: number; y: number }[] | null {
+  ): { row: number; col: number }[] | null {
     if (depth > depthLimit) return null;
-    if (current.x === goal.x && current.y === goal.y) return [current];
+    if (current.row === goal.row && current.col === goal.col) return [current];
 
     visited.add(posToString(current));
 
-    for (const move of MOVES) {
-      const nextPos = { x: current.x + move.x, y: current.y + move.y };
+    for (const move of operatorsOrder) {
+      const nextPos = { row: current.row + move.row, col: current.col + move.col };
 
       // Asegúrate de que la siguiente posición está dentro de los límites del tablero
       if (
-        nextPos.x >= 0 &&
-        nextPos.x < board.length &&
-        nextPos.y >= 0 &&
-        nextPos.y < board[0].length &&
+        nextPos.row >= 0 &&
+        nextPos.row < board.length &&
+        nextPos.col >= 0 &&
+        nextPos.col < board[0].length &&
         !visited.has(posToString(nextPos)) &&
-        board[nextPos.x][nextPos.y] !== "wall" // Evita los obstáculos
+        board[nextPos.row][nextPos.col] !== "wall" // Evita los obstáculos
       ) {
         const path = dfs(nextPos, depth + 1);
         if (path) {
