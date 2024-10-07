@@ -5,7 +5,8 @@ export function useBoard(
   initialBoard: cellType[][],
   kermitPosition: positionType,
   piggyPosition: positionType,
-  elmoPosition: positionType
+  elmoPosition: positionType,
+  onGameEnd: (reason: string) => void // Callback para detener el juego
 ) {
   const [board, setBoard] = useState(initialBoard);
 
@@ -22,6 +23,23 @@ export function useBoard(
     newBoard[piggyPosition.row][piggyPosition.col] = "piggy";
     newBoard[elmoPosition.row][elmoPosition.col] = "elmo";
     setBoard(newBoard);
+
+    // endGame
+    // validar si kermit y piggy estan en la misma posicion
+    if (
+      kermitPosition.row === piggyPosition.row &&
+      kermitPosition.col === piggyPosition.col
+    ) {
+      onGameEnd("Piggy ha atrapado a Kermit");
+    }
+
+    // validar si kermit y elmo estan en la misma posicion
+    if (
+      kermitPosition.row === elmoPosition.row &&
+      kermitPosition.col === elmoPosition.col
+    ) {
+      onGameEnd("Kermit ha atrapado a Elmo");
+    }
   };
 
   return { board, updateBoard };

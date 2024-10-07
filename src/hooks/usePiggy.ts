@@ -29,7 +29,7 @@ export function usePiggy(
     } else {
       setUseAStar(false);
     }
-  }, [position]);
+  }, [position, kermitPosition]);
 
   const moveToKermit = () => {
     // Si Piggy está usando A*, moverla hacia Kermit (Puedes implementar A* aquí)

@@ -20,7 +20,7 @@ export function useKermit(
     if (board[position.row][position.col] === "cookie") {
       setHasCookieBoost(true);
     }
-  }, [position, board]);
+  }, [position, board, elmoPosition]);
 
   const moveToElmo = () => {
     // Si hay un path calculado, mover a Kermit al siguiente paso en el camino
@@ -31,10 +31,13 @@ export function useKermit(
   };
 
   useEffect(() => {
-    // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
     const isAtElmo = () => {
-      return position.row === elmoPosition.row && position.col === elmoPosition.col;
+      return (
+        position.row === elmoPosition.row && position.col === elmoPosition.col
+      );
     };
+
+    // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
     if (path.length === 0 || stepIndex >= path.length || isAtElmo()) {
       const newPath = depthLimitedDFS(
         board,
@@ -45,7 +48,7 @@ export function useKermit(
       if (newPath && newPath.length > 1) {
         setPath(newPath); // Establece el nuevo path
         setStepIndex(1); // Inicia desde el primer paso
-      } else if (isAtElmo()) {
+      } else if (!isAtElmo()) {
         console.warn(
           "No se encontró un camino hacia Elmo, revise el valor profundidad máxima"
         );

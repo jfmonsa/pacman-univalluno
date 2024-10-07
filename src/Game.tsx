@@ -8,7 +8,7 @@ import { cellType } from "./utils/types";
 // TODO: implementar types en ./types para poder reutilizarlos
 // TODO: la configuración iniciald del tablero 2 opciones: 1. random, 2. arrastrando
 
-const initialBoard : cellType[][] = [
+const initialBoard: cellType[][] = [
   ["empty", "empty", "empty", "empty", "kermit"],
   ["empty", "cookie", "wall", "empty", "empty"],
   ["elmo", "wall", "wall", "piggy", "empty"],
@@ -16,8 +16,13 @@ const initialBoard : cellType[][] = [
 ];
 
 function Game() {
-  const elmoPosition = {row: 2, col: 0};
+  const elmoPosition = { row: 2, col: 0 };
   const [isSimulating, setIsSimulating] = useState(false);
+
+  const handleGameEnd = (reason: string) => {
+    console.log(reason);
+    setIsSimulating(false);
+  };
 
   // Usa los hooks para gestionar a Kermit y Piggy
   const { position: kermitPosition, moveToElmo } = useKermit(
@@ -35,7 +40,8 @@ function Game() {
     initialBoard,
     kermitPosition,
     piggyPosition,
-    elmoPosition
+    elmoPosition,
+    handleGameEnd
   );
 
   // Simula el movimiento de Kermit y Piggy
