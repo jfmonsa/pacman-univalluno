@@ -59,7 +59,8 @@ function Game() {
 
   return (
     <main>
-      <div className={styles.gameBoard}>
+      <div className = {styles.container}>
+        <div className={styles.gameBoard}>
         {board.map((row: string[], rowIndex: number) => (
           <div key={rowIndex} className={styles.row}>
             {row.map((cell: string, colIndex: number) => (
@@ -75,6 +76,7 @@ function Game() {
       <button className={styles.button} onClick={handleSimulation}>
         {isSimulating ? "Stop Simulation" : "Start Simulation"}
       </button>
+      </div>
     </main>
   );
 }
