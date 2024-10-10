@@ -1,22 +1,27 @@
-body{
+body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   background: linear-gradient(black, gray);
+  margin: 0;
+  padding: 0;
 }
 
-/*Estilo para que el div que contiene al game-board quede alineado con el boton de inicio en el centro cada uno*/
 .container {
+  margin: 30px;
   text-align: center;
+  min-height: 100vh; /* Asegurar que el cuerpo ocupe al menos el alto de la pantalla */
+  width: 90vw; /* Ajusta el contenedor principal */
+  max-width: 1100px; /* Limita el ancho máximo en pantallas grandes */
 }
 
-/* Estilos generales para el contenedor del juego */
+/* Estilos para el tablero de juego */
 .game-board {
   display: flex;
   flex-direction: column;
   margin: 20px auto;
-  width: 5000px; /* Ajustar según el tamaño deseado */
+  width: 100%;
+  max-width: 600px; /* Limitar el ancho en pantallas grandes */
 }
 
 /* Estilos para las filas del tablero */
@@ -26,8 +31,8 @@ body{
 
 /* Estilos para las celdas del tablero */
 .cell {
-  width: 100px;
-  height: 100px;
+  flex: 1;
+  aspect-ratio: 1; /* Esto asegura que la celda siempre sea cuadrada */
   border: 1px solid #000;
   display: flex;
   align-items: center;
@@ -60,13 +65,13 @@ body{
   background-color: #312c2cd3;
 }
 
-/* Estilos para las imágenes de los personajes */
+/* Estilos para las imágenes dentro de las celdas */
 .cell img {
-  width: 30px;
-  height: 30px;
+  max-width: 80%;
+  height: auto;
 }
 
-/* Estilo para el boton */
+/* Estilos para el botón */
 button {
   position: relative;
   margin: 30px;
@@ -77,30 +82,17 @@ button {
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 2px;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.31);
   color: #fff;
   overflow: hidden;
   box-shadow: 0 0 0 0 transparent;
-  -webkit-transition: all 0.2s ease-in;
-  -moz-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   cursor: pointer;
-  margin-bottom: 16px;
 }
 
-/*Estilos para el boton sobre la animacion cuando el cursor esta sobre el*/
 button:hover {
   background: rgb(0, 0, 0);
   box-shadow: 0 0 30px 5px rgba(204, 195, 195, 0.815);
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-}
-
-button:hover::before {
-  -webkit-animation: sh02 0.5s 0s linear;
-  -moz-animation: sh02 0.5s 0s linear;
-  animation: sh02 0.5s 0s linear;
 }
 
 button::before {
@@ -114,11 +106,11 @@ button::before {
   opacity: 0;
   background: #fff;
   box-shadow: 0 0 50px 30px #fff;
-  -webkit-transform: skewX(-20deg);
-  -moz-transform: skewX(-20deg);
-  -ms-transform: skewX(-20deg);
-  -o-transform: skewX(-20deg);
   transform: skewX(-20deg);
+}
+
+button:hover::before {
+  animation: sh02 0.5s linear;
 }
 
 @keyframes sh02 {
@@ -139,9 +131,6 @@ button::before {
 
 button:active {
   box-shadow: 0 0 0 0 transparent;
-  -webkit-transition: box-shadow 0.2s ease-in;
-  -moz-transition: box-shadow 0.2s ease-in;
-  transition: box-shadow 0.2s ease-in;
 }
 
 /* Estilo para el select */
@@ -154,6 +143,25 @@ select {
   margin: 10px 0;
   font-size: 16px;
 }
+
+/* Encabezado centrado */
 h1 {
   text-align: center;
+}
+
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .game-board {
+    width: 100%;
+  }
+  
+  .cell {
+    min-width: 60px;
+    min-height: 60px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
 }
