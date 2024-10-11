@@ -4,19 +4,22 @@ import { useKermit } from "./hooks/useKermit";
 import { usePiggy } from "./hooks/usePiggy";
 import { useBoard } from "./hooks/useBoard";
 import { cellType } from "./utils/types";
+import { findPosition } from "./utils/findAgentPosition";
+import { generateRandomBoard } from "./utils/generateRandomBoard";
 
-// TODO: implementar types en ./types para poder reutilizarlos
 // TODO: la configuración iniciald del tablero 2 opciones: 1. random, 2. arrastrando
 
-const initialBoard: cellType[][] = [
-  ["empty", "empty", "empty", "empty", "kermit"],
-  ["empty", "cookie", "wall", "empty", "empty"],
-  ["elmo", "wall", "wall", "piggy", "empty"],
-  ["empty", "wall", "empty", "empty", "empty"],
-];
+const rows = 7;
+const cols = 5;
+const wallPercentage = 0.2; // 20% de las casillas serán paredes
+
+const initialBoard: cellType[][] = generateRandomBoard(rows, cols, wallPercentage);
 
 function Game() {
-  const elmoPosition = { row: 2, col: 0 };
+  const elmoInitialPos = findPosition(initialBoard, "elmo");
+  const kermitInitialPos = findPosition(initialBoard, "kermit");
+  const piggyInitialPos = findPosition(initialBoard, "piggy");
+
   const [isSimulating, setIsSimulating] = useState(false);
 
   const handleGameEnd = (reason: string) => {
@@ -26,12 +29,12 @@ function Game() {
 
   // Usa los hooks para gestionar a Kermit y Piggy
   const { position: kermitPosition, moveToElmo } = useKermit(
-    { row: 0, col: 4 },
+    kermitInitialPos,
     initialBoard,
-    elmoPosition
+    elmoInitialPos
   );
   const { position: piggyPosition, moveToKermit } = usePiggy(
-    { row: 2, col: 3 },
+    piggyInitialPos,
     initialBoard,
     kermitPosition
   );
@@ -40,7 +43,7 @@ function Game() {
     initialBoard,
     kermitPosition,
     piggyPosition,
-    elmoPosition,
+    elmoInitialPos,
     handleGameEnd
   );
 
@@ -73,6 +76,8 @@ function Game() {
           </div>
         ))}
       </div>
+      <label>Test</label>
+      <input type="range" min="2" max="10" ></input>
       <button className={styles.button} onClick={handleSimulation}>
         {isSimulating ? "Stop Simulation" : "Start Simulation"}
       </button>
