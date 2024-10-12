@@ -4,6 +4,7 @@ import { useKermit } from "./hooks/useKermit";
 import { usePiggy } from "./hooks/usePiggy";
 import { useBoard } from "./hooks/useBoard";
 import { cellType } from "./utils/types";
+import { BeautifulTree, NodeContentGetter } from "@beautiful-tree/react";
 import { findPosition } from "./utils/findAgentPosition";
 import { generateRandomBoard } from "./utils/generateRandomBoard";
 
@@ -13,7 +14,11 @@ const rows = 7;
 const cols = 5;
 const wallPercentage = 0.2; // 20% de las casillas serán paredes
 
-const initialBoard: cellType[][] = generateRandomBoard(rows, cols, wallPercentage);
+const initialBoard: cellType[][] = generateRandomBoard(
+  rows,
+  cols,
+  wallPercentage
+);
 
 function Game() {
   const elmoInitialPos = findPosition(initialBoard, "elmo");
@@ -27,12 +32,21 @@ function Game() {
     setIsSimulating(false);
   };
 
+  const [avoidingLoopsDFS, setAvoidingLoopsDFS] = useState(true);
+
   // Usa los hooks para gestionar a Kermit y Piggy
   const { position: kermitPosition, moveToElmo } = useKermit(
     kermitInitialPos,
     initialBoard,
-    elmoInitialPos
+    elmoInitialPos,
+    avoidingLoopsDFS,
+    rows * cols
   );
+
+  const treeKermitToElmo = JSON.parse(
+    localStorage.getItem("treeKermitToElmo") as string
+  );
+
   const { position: piggyPosition, moveToKermit } = usePiggy(
     piggyInitialPos,
     initialBoard,
@@ -59,11 +73,9 @@ function Game() {
   }, [isSimulating, moveToElmo, moveToKermit, updateBoard]);
 
   const handleSimulation = () => setIsSimulating(!isSimulating);
-
   return (
-    <main>
-      <div className = {styles.container}>
-        <div className={styles.gameBoard}>
+    <main className={styles.container}>
+      <div className={styles.gameBoard}>
         {board.map((row: string[], rowIndex: number) => (
           <div key={rowIndex} className={styles.row}>
             {row.map((cell: string, colIndex: number) => (
@@ -77,10 +89,43 @@ function Game() {
         ))}
       </div>
       <label>Test</label>
-      <input type="range" min="2" max="10" ></input>
+      <input type="range" min="2" max="10"></input>
       <button className={styles.button} onClick={handleSimulation}>
         {isSimulating ? "Stop Simulation" : "Start Simulation"}
       </button>
+      <label>
+        Evitar ciclos para dfs?
+        <input
+          type="checkbox"
+          checked={avoidingLoopsDFS}
+          onChange={(e) => {
+            setAvoidingLoopsDFS(e.target.checked);
+          }}
+        />
+      </label>
+      <div>
+        <h2>Kermit a Elmo</h2>
+        <h3>Arbol</h3>
+        {treeKermitToElmo && JSON.stringify(treeKermitToElmo) && (
+          <BeautifulTree
+            id={"my-tree"}
+            tree={treeKermitToElmo}
+            svgProps={{
+              width: 1000,
+              height: 1000,
+              sizeUnit: "px",
+            }}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            getNodeContent={(node: any) => {
+              console.log(node.v);
+              return node.v || "Node";
+            }}
+          />
+        )}
+        <h3>Camino</h3>
+        {localStorage.getItem("pathKermitToElmo") && (
+          <div>{localStorage.getItem("pathKermitToElmo") as string}</div>
+        )}
       </div>
     </main>
   );

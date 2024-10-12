@@ -6,21 +6,14 @@ import { cellType, positionType } from "../utils/types";
 export function useKermit(
   initialPosition: positionType,
   board: cellType[][],
-  elmoPosition: positionType
+  elmoPosition: positionType,
+  avoidingLoopsDFS: boolean,
+  numberOfCells: number
 ) {
   const { position, move } = useAgent(initialPosition, board);
-  const [hasCookieBoost, setHasCookieBoost] = useState(false);
   const [path, setPath] = useState<positionType[]>([]); // Almacena el camino calculado
   const [stepIndex, setStepIndex] = useState(0); // Índice para seguir el camino
-  // TODO: obtener este valor en un slider, con 12 por defecto
-  const DEPTH_LIMIT = 12;
-
-  useEffect(() => {
-    // Verifica si Kermit está en la posición de la cookie
-    if (board[position.row][position.col] === "cookie") {
-      setHasCookieBoost(true);
-    }
-  }, [position, board, elmoPosition]);
+  const DEPTH_LIMIT = Math.floor(numberOfCells / 2);
 
   const moveToElmo = () => {
     // Si hay un path calculado, mover a Kermit al siguiente paso en el camino
@@ -43,18 +36,25 @@ export function useKermit(
         board,
         position,
         elmoPosition,
-        DEPTH_LIMIT
+        DEPTH_LIMIT,
+        avoidingLoopsDFS
       );
       if (newPath && newPath.length > 1) {
         setPath(newPath); // Establece el nuevo path
         setStepIndex(1); // Inicia desde el primer paso
       } else if (!isAtElmo()) {
-        console.warn(
-          "No se encontró un camino hacia Elmo, revise el valor profundidad máxima"
-        );
+        alert("Kermint no encontró un camino a elmo, revisar la profundidad");
       }
     }
-  }, [position, elmoPosition, path, stepIndex, board]);
+  }, [
+    position,
+    elmoPosition,
+    path,
+    stepIndex,
+    board,
+    avoidingLoopsDFS,
+    DEPTH_LIMIT,
+  ]);
 
-  return { position, moveToElmo, hasCookieBoost };
+  return { position, moveToElmo };
 }

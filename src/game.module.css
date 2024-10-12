@@ -2,7 +2,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(black, gray);
+  background: #8ecae6;
   margin: 0;
   padding: 0;
 }
@@ -10,29 +10,24 @@ body {
 .container {
   margin: 30px;
   text-align: center;
-  min-height: 100vh; /* Asegurar que el cuerpo ocupe al menos el alto de la pantalla */
-  width: 90vw; /* Ajusta el contenedor principal */
-  max-width: 1100px; /* Limita el ancho máximo en pantallas grandes */
+  width: 80vw;
+  max-width: 500px;
+  max-height: 500px;
 }
 
-/* Estilos para el tablero de juego */
+/* Estilos para el tablero */
 .game-board {
   display: flex;
   flex-direction: column;
   margin: 20px auto;
   width: 100%;
-  max-width: 600px; /* Limitar el ancho en pantallas grandes */
 }
-
-/* Estilos para las filas del tablero */
 .row {
   display: flex;
 }
-
-/* Estilos para las celdas del tablero */
 .cell {
   flex: 1;
-  aspect-ratio: 1; /* Esto asegura que la celda siempre sea cuadrada */
+  aspect-ratio: 1; /* asegura que la celda siempre sea cuadrada */
   border: 1px solid #000;
   display: flex;
   align-items: center;
@@ -154,7 +149,7 @@ h1 {
   .game-board {
     width: 100%;
   }
-  
+
   .cell {
     min-width: 60px;
     min-height: 60px;
