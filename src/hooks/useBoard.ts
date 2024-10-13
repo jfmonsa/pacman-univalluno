@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { cellType, positionType } from "../utils/types";
 
 export function useBoard(
-  initialBoard: cellType[][],
+  board: cellType[][],
+  setBoard: (board: cellType[][]) => void,
   kermitPosition: positionType,
   piggyPosition: positionType,
   elmoPosition: positionType,
   onGameEnd: (reason: string) => void // Callback para detener el juego
 ) {
-  const [board, setBoard] = useState(initialBoard);
-
   const updateBoard = () => {
     const newBoard = board.map((row: cellType[]) => row.slice()); // Crea una copia del tablero
     // Limpia las posiciones anteriores de Kermit y Piggy

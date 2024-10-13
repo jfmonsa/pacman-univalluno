@@ -11,36 +11,42 @@ import Board from "./components/Board/Board";
 import Controls from "./components/Controls/Controls";
 import AlgoVisualization from "./components/AlgoVisulization/AlgoVisualization";
 
-// TODO: la configuración iniciald del tablero 2 opciones: 1. random, 2. arrastrando
-
-const rows = 7;
-const cols = 5;
+// Parámetros iniciales
+const initialRows = 7;
+const initialCols = 5;
 const wallPercentage = 0.2; // 20% de las casillas serán paredes
 
-const initialBoard: cellType[][] = generateRandomBoard(
-  rows,
-  cols,
-  wallPercentage
-);
-
 function Game() {
-  const elmoInitialPos = findPosition(initialBoard, "elmo");
-  const kermitInitialPos = findPosition(initialBoard, "kermit");
-  const piggyInitialPos = findPosition(initialBoard, "piggy");
+  // Estados para el tamaño del tablero
+  const [rows, setRows] = useState(initialRows);
+  const [cols, setCols] = useState(initialCols);
+  const [board, setBoard] = useState<cellType[][]>(() =>
+    generateRandomBoard(rows, cols, wallPercentage)
+  );
 
+  // Estado de simulación y control de loops
   const [isSimulating, setIsSimulating] = useState(false);
+  const [avoidingLoopsDFS, setAvoidingLoopsDFS] = useState(true);
 
   const handleGameEnd = (reason: string) => {
-    console.log(reason);
+    alert(reason);
     setIsSimulating(false);
   };
 
-  const [avoidingLoopsDFS, setAvoidingLoopsDFS] = useState(true);
+  // Regenerar el si isSimulating es false
+  useEffect(() => {
+    if (isSimulating) return;
+    setBoard(generateRandomBoard(rows, cols, wallPercentage));
+  }, [rows, cols, isSimulating]);
 
-  // Usa los hooks para gestionar a Kermit y Piggy
+  // Hooks para los personajes
+  const elmoInitialPos = findPosition(board, "elmo");
+  const kermitInitialPos = findPosition(board, "kermit");
+  const piggyInitialPos = findPosition(board, "piggy");
+
   const { position: kermitPosition, moveToElmo } = useKermit(
     kermitInitialPos,
-    initialBoard,
+    board,
     elmoInitialPos,
     avoidingLoopsDFS,
     rows * cols
@@ -48,19 +54,20 @@ function Game() {
 
   const { position: piggyPosition, moveToKermit } = usePiggy(
     piggyInitialPos,
-    initialBoard,
+    board,
     kermitPosition
   );
 
-  const { board, updateBoard } = useBoard(
-    initialBoard,
+  const { updateBoard } = useBoard(
+    board,
+    setBoard,
     kermitPosition,
     piggyPosition,
     elmoInitialPos,
     handleGameEnd
   );
 
-  // Simula el movimiento de Kermit y Piggy
+  // Simular movimientos
   useEffect(() => {
     if (!isSimulating) return;
     const interval = setInterval(() => {
@@ -71,9 +78,17 @@ function Game() {
     return () => clearInterval(interval);
   }, [isSimulating, moveToElmo, moveToKermit, updateBoard]);
 
+  // Manejar la simulación
   const handleSimulation = () => setIsSimulating(!isSimulating);
+
+  // Manejar la regeneración del tablero
+  const handleResetBoard = () => {
+    setBoard(generateRandomBoard(rows, cols, wallPercentage));
+  };
+
   return (
     <main className="container">
+      <h1>Pacman Univalluno</h1>
       <Board board={board} />
       <Controls
         {...{
@@ -81,6 +96,11 @@ function Game() {
           handleSimulation,
           avoidingLoopsDFS,
           setAvoidingLoopsDFS,
+          rows,
+          setRows,
+          cols,
+          setCols,
+          handleResetBoard,
         }}
       />
       <AlgoVisualization />
