@@ -23,33 +23,46 @@ function Game() {
   const [board, setBoard] = useState<cellType[][]>(() =>
     generateRandomBoard(rows, cols, wallPercentage)
   );
+  const [wasReset, setWasReset] = useState(false);
 
   // Estado de simulación y control de loops
   const [isSimulating, setIsSimulating] = useState(false);
   const [avoidingLoopsDFS, setAvoidingLoopsDFS] = useState(true);
 
   const handleGameEnd = (reason: string) => {
-    alert(reason);
+    console.log(reason);
     setIsSimulating(false);
   };
 
   // Regenerar el si isSimulating es false
   useEffect(() => {
     if (isSimulating) return;
-    setBoard(generateRandomBoard(rows, cols, wallPercentage));
+    const newBoard = generateRandomBoard(rows, cols, wallPercentage);
+    setBoard(newBoard);
+
+    setKermitInitialPos(findPosition(newBoard, "kermit"));
+    setElmoInitialPos(findPosition(newBoard, "elmo"));
+    setPiggyInitialPos(findPosition(newBoard, "piggy"));
   }, [rows, cols, isSimulating]);
 
   // Hooks para los personajes
-  const elmoInitialPos = findPosition(board, "elmo");
-  const kermitInitialPos = findPosition(board, "kermit");
-  const piggyInitialPos = findPosition(board, "piggy");
+  const [kermitInitialPos, setKermitInitialPos] = useState(() =>
+    findPosition(board, "kermit")
+  );
+  const [elmoInitialPos, setElmoInitialPos] = useState(() =>
+    findPosition(board, "elmo")
+  );
+  const [piggyInitialPos, setPiggyInitialPos] = useState(() =>
+    findPosition(board, "piggy")
+  );
 
   const { position: kermitPosition, moveToElmo } = useKermit(
     kermitInitialPos,
     board,
     elmoInitialPos,
     avoidingLoopsDFS,
-    rows * cols
+    rows * cols,
+    wasReset
   );
 
   const { position: piggyPosition, moveToKermit } = usePiggy(
@@ -83,6 +96,7 @@ function Game() {
 
   // Manejar la regeneración del tablero
   const handleResetBoard = () => {
+    setWasReset(true);
     setBoard(generateRandomBoard(rows, cols, wallPercentage));
   };
 

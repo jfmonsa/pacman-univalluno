@@ -8,7 +8,8 @@ export function useKermit(
   board: cellType[][],
   elmoPosition: positionType,
   avoidingLoopsDFS: boolean,
-  numberOfCells: number
+  numberOfCells: number,
+  wasReset: boolean
 ) {
   const { position, move } = useAgent(initialPosition, board);
   const [path, setPath] = useState<positionType[]>([]); // Almacena el camino calculado
@@ -31,7 +32,7 @@ export function useKermit(
     };
 
     // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
-    if (path.length === 0 || stepIndex >= path.length || isAtElmo()) {
+    if (path.length === 0 || stepIndex >= path.length) {
       const newPath = depthLimitedDFS(
         board,
         position,
@@ -39,6 +40,8 @@ export function useKermit(
         DEPTH_LIMIT,
         avoidingLoopsDFS
       );
+      console.log("hola recalculo");
+
       if (newPath && newPath.length > 1) {
         setPath(newPath); // Establece el nuevo path
         setStepIndex(1); // Inicia desde el primer paso
@@ -55,6 +58,12 @@ export function useKermit(
     avoidingLoopsDFS,
     DEPTH_LIMIT,
   ]);
+
+  // muy importante para que cada que cambie el board recalcule el path con el nuevo board
+  useEffect(() => {
+    setPath([]);
+    setStepIndex(0);
+  }, [numberOfCells, wasReset]);
 
   return { position, moveToElmo };
 }
