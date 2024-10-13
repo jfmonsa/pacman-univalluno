@@ -1,4 +1,4 @@
-import { cellType, positionType } from "../utils/types";
+import { cellType, positionType, TreeNode } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
 
 export function aStar(
@@ -6,7 +6,7 @@ export function aStar(
   start: positionType,
   goal: positionType,
   hasCookieBoost: boolean
-) {
+): { path: positionType[] | null, tree: TreeNode } {
 
   const costMultiplier = hasCookieBoost ? 0.5 : 1; // Costo después de la galleta
   const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Lista de nodos por explorar
@@ -18,6 +18,10 @@ export function aStar(
   > = {}; // Para reconstruir el camino
 
   const key = (pos: { row: number; col: number }) => `${pos.row},${pos.col}`; // Llave única para cada casilla
+
+  const tree: TreeNode = { data: { v: key(start) }, children: [] };
+  const nodeMap = new Map<string, TreeNode>();
+  nodeMap.set(key(start), tree);
 
   while (openList.length > 0) {
     // Ordena la lista abierta por el valor f (g + heurística)
@@ -33,47 +37,45 @@ export function aStar(
         pos = cameFrom[key(pos)];
       }
       path.reverse();
-      return path;
+      return { path, tree };
     }
 
-    closedSet.add(key(current)); // Marca como explorado
+    closedSet.add(key(current));
 
-    // Explora las direcciones posibles
+    // Explora las direcciones en el orden definido
     for (const dir of operatorsOrder) {
-      const neighbor = { row: current.row + dir.row, col: current.col + dir.col };
+      const newRow = current.row + dir.row;
+      const newCol = current.col + dir.col;
 
-      // Verifica los límites del tablero col si la casilla no es un obstáculo
+      // Verifica los límites del tablero y evita obstáculos
       if (
-        neighbor.row >= 0 &&
-        neighbor.row < board.length &&
-        neighbor.col >= 0 &&
-        neighbor.col < board[0].length &&
-        board[neighbor.row][neighbor.col] !== "wall" &&
-        !closedSet.has(key(neighbor)) // No hemos explorado esta casilla
+        newRow >= 0 &&
+        newRow < board.length && // Límites de filas
+        newCol >= 0 &&
+        newCol < board[0].length && // Límites de columnas
+        !closedSet.has(key({ row: newRow, col: newCol })) &&
+        board[newRow][newCol] !== "wall" // Evita muros
       ) {
-        const tentative_g = current.g + costMultiplier; // Costo para llegar a este vecino
-        const f = tentative_g + manhattanDistance(neighbor, goal); // Costo total (g + h)
+        const g = current.g + 1 * costMultiplier;
+        const f = g + manhattanDistance({ row: newRow, col: newCol }, goal);
 
-        // Si ya hay un nodo en la lista abierta con esta posición col menor f, lo saltamos
-        const existing = openList.find(
-          (n) => n.row === neighbor.row && n.col === neighbor.col
-        );
-        if (existing && existing.f <= f) continue;
+        const neighbor = { row: newRow, col: newCol, g, f };
 
-        // Actualizamos el nodo
-        openList.push({ ...neighbor, g: tentative_g, f });
-        cameFrom[key(neighbor)] = { ...current, g: current.g, f: current.f }; // Almacena el camino de regreso
+        if (!openList.some(node => node.row === newRow && node.col === newCol)) {
+          openList.push(neighbor);
+          cameFrom[key(neighbor)] = current;
+
+          const newNode: TreeNode = { data: { v: key(neighbor) }, children: [] };
+          nodeMap.get(key(current))!.children!.push({ node: newNode });
+          nodeMap.set(key(neighbor), newNode);
+        }
       }
     }
   }
 
-  return null; // Si no hay camino
+  return { path: null, tree }; // Si no se encuentra camino
 }
 
-// Heurística de Manhattan para calcular la distancia entre dos puntos
-function manhattanDistance(
-  a: positionType,
-  b: positionType
-) {
-  return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
+function manhattanDistance(pos1: positionType, pos2: positionType): number {
+  return Math.abs(pos1.row + pos1.col - pos2.row - pos2.col);
 }
