@@ -1,0 +1,51 @@
+/* General styles */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #8ecae6;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin: 30px;
+  text-align: center;
+  width: 80vw;
+  max-width: 500px;
+  max-height: 500px;
+}
+
+/* Estilo para el select */
+select {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 4px;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+/* Encabezado centrado */
+h1 {
+  text-align: center;
+}
+
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .game-board {
+    width: 100%;
+  }
+
+  .cell {
+    min-width: 60px;
+    min-height: 60px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+}
