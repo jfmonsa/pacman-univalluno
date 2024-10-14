@@ -7,7 +7,8 @@ export function depthLimitedDFS(
   start: positionType,
   goal: positionType,
   depthLimit: number,
-  avoidingLoopsDFS: boolean
+  avoidingLoopsDFS: boolean,
+  setKermitTree: (tree: TreeNode) => void
 ): positionType[] | null {
   // Estructura de datos para evitar posiciones ya visitadas
 
@@ -76,9 +77,6 @@ export function depthLimitedDFS(
   }
 
   const path = dfs(start, 0, tree);
-  console.log("tree", tree);
-  console.log("tree", JSON.stringify(tree));
-  localStorage.setItem("treeKermitToElmo", JSON.stringify(tree));
-  localStorage.setItem("pathKermitToElmo", JSON.stringify(path));
+  setKermitTree(tree);
   return path;
 }

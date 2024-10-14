@@ -1,0 +1,48 @@
+.game-board {
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
+  width: 100%;
+}
+.row {
+  display: flex;
+}
+.cell {
+  flex: 1;
+  aspect-ratio: 1; /* asegura que la celda siempre sea cuadrada */
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+/* for board characters */
+.cell.kermit {
+  background-color: #7fc97f;
+}
+
+.cell.piggy {
+  background-color: #f4a7b9;
+}
+
+.cell.elmo {
+  background-color: #ff6f61;
+}
+
+.cell.cookie {
+  background-color: #f5e05b;
+}
+
+.cell.empty {
+  background-color: #fff;
+}
+/* for walls */
+.cell.wall {
+  background-color: #312c2cd3;
+}
+
+.cell img {
+  max-width: 80%;
+  height: auto;
+}
