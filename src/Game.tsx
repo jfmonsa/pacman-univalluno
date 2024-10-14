@@ -14,7 +14,7 @@ import AlgoVisualization from "./components/AlgoVisulization/AlgoVisualization";
 const WALLPERCENTAGE = 0.2; // 20% de las casillas serán paredes
 
 function Game() {
-  const [rows, setRows] = useState(7);
+  const [rows, setRows] = useState(4);
   const [cols, setCols] = useState(5);
   const [board, setBoard] = useState<cellType[][]>(() =>
     generateRandomBoard(rows, cols, WALLPERCENTAGE)
@@ -52,7 +52,7 @@ function Game() {
     wasReset
   );
 
-  const { moveToKermit } = usePiggy(
+  const { moveToKermit, piggyTree, piggyPath } = usePiggy(
     piggyPosition,
     setPiggyPosition,
     board,
@@ -116,8 +116,8 @@ function Game() {
         {...{
           kermitTree,
           kermitPath,
-          // piggyTree,
-          // piggyPath,
+          piggyTree,
+          piggyPath,
         }}
       />
     </main>

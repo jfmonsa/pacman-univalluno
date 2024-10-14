@@ -10,15 +10,16 @@ const getNodeContent = (node: any) => {
 interface AlogVisualizationProps {
   kermitTree: TreeNode | null;
   kermitPath: positionType[] | null;
-  // piggyTree: TreeNode | null;
-  // piggyPath: positionType[] | null;
+  piggyTree: TreeNode | null;
+  piggyPath: positionType[] | null;
 }
 
 export default function AlgoVisualization({
   kermitTree,
   kermitPath,
-}: // piggyTree,
-// piggyPath,
+  piggyTree,
+  piggyPath,
+}: 
 AlogVisualizationProps) {
   return (
     <div>
@@ -38,6 +39,24 @@ AlogVisualizationProps) {
       )}
       <h3>Camino</h3>
       {kermitPath && <div>{JSON.stringify(kermitPath)}</div>}
+
+      <h2>Piggy a Kermit</h2>
+      <h3>Arbol</h3>
+      {piggyTree && (
+        <BeautifulTree
+          id={"piggy-tree"}
+          tree={piggyTree}
+          svgProps={{
+            width: 1000,
+            height: 1000,
+            sizeUnit: "px",
+          }}
+          getNodeContent={getNodeContent}
+        />
+      )}
+      <h3>Camino</h3>
+      {piggyPath && <div>{JSON.stringify(piggyPath)}</div>}
+    
     </div>
   );
 }
