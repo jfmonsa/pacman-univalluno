@@ -32,20 +32,3 @@ select {
 h1 {
   text-align: center;
 }
-
-/* Media Queries para pantallas más pequeñas */
-@media (max-width: 768px) {
-  .game-board {
-    width: 100%;
-  }
-
-  .cell {
-    min-width: 60px;
-    min-height: 60px;
-  }
-
-  button {
-    font-size: 12px;
-    padding: 8px 16px;
-  }
-}

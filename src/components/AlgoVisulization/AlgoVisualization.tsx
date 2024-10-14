@@ -1,4 +1,5 @@
 import { BeautifulTree } from "@beautiful-tree/react";
+import { positionType, TreeNode } from "../../utils/types";
 
 // helpers
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -6,22 +7,27 @@ const getNodeContent = (node: any) => {
   return node.v || "Node";
 };
 
-// kermit results
-const treeKermitToElmo = JSON.parse(
-  localStorage.getItem("treeKermitToElmo") as string
-);
+interface AlogVisualizationProps {
+  kermitTree: TreeNode | null;
+  kermitPath: positionType[] | null;
+  // piggyTree: TreeNode | null;
+  // piggyPath: positionType[] | null;
+}
 
-const pathKermitToElmo = localStorage.getItem("pathKermitToElmo");
-
-export default function AlgoVisualization() {
+export default function AlgoVisualization({
+  kermitTree,
+  kermitPath,
+}: // piggyTree,
+// piggyPath,
+AlogVisualizationProps) {
   return (
     <div>
       <h2>Kermit a Elmo</h2>
       <h3>Arbol</h3>
-      {treeKermitToElmo && (
+      {kermitTree && (
         <BeautifulTree
           id={"my-tree"}
-          tree={treeKermitToElmo}
+          tree={kermitTree}
           svgProps={{
             width: 1000,
             height: 1000,
@@ -31,7 +37,7 @@ export default function AlgoVisualization() {
         />
       )}
       <h3>Camino</h3>
-      {pathKermitToElmo && <div>{pathKermitToElmo}</div>}
+      {kermitPath && <div>{JSON.stringify(kermitPath)}</div>}
     </div>
   );
 }

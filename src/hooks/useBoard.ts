@@ -24,21 +24,23 @@ export function useBoard(
 
     // endGame
     // validar si kermit y piggy estan en la misma posicion
-    if (
+    const isKermitAndPiggyInSamePosition =
       kermitPosition.row === piggyPosition.row &&
-      kermitPosition.col === piggyPosition.col
-    ) {
+      kermitPosition.col === piggyPosition.col;
+
+    const isKermitAndElmoInSamePosition =
+      kermitPosition.row === elmoPosition.row &&
+      kermitPosition.col === elmoPosition.col;
+
+    if (isKermitAndPiggyInSamePosition) {
       onGameEnd("Piggy ha atrapado a Kermit");
     }
 
     // validar si kermit y elmo estan en la misma posicion
-    if (
-      kermitPosition.row === elmoPosition.row &&
-      kermitPosition.col === elmoPosition.col
-    ) {
+    if (isKermitAndElmoInSamePosition) {
       onGameEnd("Kermit ha atrapado a Elmo");
     }
   };
 
-  return { board, updateBoard };
+  return { updateBoard };
 }
