@@ -39,7 +39,7 @@ export default function Controls({
   return (
     <>
       <Button onClick={handleSimulation}>
-        {isSimulating ? "Stop Simulation" : "Start Simulation"}
+        {isSimulating ? "Pause Simulation" : "Start Simulation"}
       </Button>
       <label>
         Evitar ciclos para DFS?
