@@ -36,6 +36,7 @@ export function aStar(
         pos = cameFrom[key(pos)];
       }
       path.reverse();
+      console.log("Camino encontrado:", path);
       return { path, tree };
     }
 
