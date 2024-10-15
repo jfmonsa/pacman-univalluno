@@ -48,11 +48,14 @@ export function aStar(
       const newCol = current.col + dir.col;
 
       // Verifica los límites del tablero y evita obstáculos
-      if (
+      const isInBounds =
         newRow >= 0 &&
-        newRow < board.length && // Límites de filas
+        newRow < board.length &&
         newCol >= 0 &&
-        newCol < board[0].length && // Límites de columnas
+        newCol < board[0].length;
+
+      if (
+        isInBounds &&
         !closedSet.has(key({ row: newRow, col: newCol })) &&
         board[newRow][newCol] !== "wall" // Evita muros
       ) {
@@ -77,7 +80,6 @@ export function aStar(
       }
     }
   }
-
   return { path: null, tree }; // Si no se encuentra camino
 }
 

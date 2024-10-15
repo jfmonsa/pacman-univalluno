@@ -1,10 +1,7 @@
 /* General styles */
 
 body {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  background: #8ecae6;
+  background: #00161f;
   margin: 0;
   padding: 0;
 }
@@ -12,11 +9,27 @@ body {
 .container {
   margin: auto;
   width: 80vw;
-  max-width: 600px;
-  /* max-height: 500px; */
 }
 
 /* Encabezado centrado */
 h1 {
   text-align: center;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+li,
+a,
+input,
+button,
+label {
+  color: #fff;
+}
+
+h1 {
+  font-family: "Bungee", sans-serif;
+  font-weight: 400;
 }

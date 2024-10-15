@@ -37,7 +37,7 @@ export default function Controls({
   handleResetBoard,
 }: ControlsProps) {
   return (
-    <>
+    <div className={styles.gameControls}>
       <label>
         Evitar ciclos para DFS?
         <input
@@ -70,6 +70,6 @@ export default function Controls({
         {isSimulating ? "Pause Simulation" : "Start Simulation"}
       </Button>
       <Button onClick={handleResetBoard}>Regenerar Tablero</Button>
-    </>
+    </div>
   );
 }

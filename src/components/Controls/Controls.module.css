@@ -1,3 +1,16 @@
+.gameControls {
+  /* display: flex;
+  flex-direction: column; */
+  margin: 20px auto;
+  width: 100%;
+  min-width: 300px;
+  max-width: 600px;
+}
+
+input {
+  margin-left: 20px;
+}
+
 /* For button */
 button {
   position: relative;
