@@ -12,6 +12,7 @@ interface AlogVisualizationProps {
   kermitPath: positionType[] | null;
   piggyTree: TreeNode | null;
   piggyPath: positionType[] | null;
+  piggyStrategy: string;
 }
 
 export default function AlgoVisualization({
@@ -19,8 +20,8 @@ export default function AlgoVisualization({
   kermitPath,
   piggyTree,
   piggyPath,
-}: 
-AlogVisualizationProps) {
+  piggyStrategy,
+}: AlogVisualizationProps) {
   return (
     <div>
       <h2>Kermit a Elmo</h2>
@@ -40,7 +41,7 @@ AlogVisualizationProps) {
       <h3>Camino</h3>
       {kermitPath && <div>{JSON.stringify(kermitPath)}</div>}
 
-      <h2>Piggy a Kermit</h2>
+      <h2>Piggy a Kermit: {piggyStrategy}</h2>
       <h3>Arbol</h3>
       {piggyTree && (
         <BeautifulTree
@@ -56,7 +57,6 @@ AlogVisualizationProps) {
       )}
       <h3>Camino</h3>
       {piggyPath && <div>{JSON.stringify(piggyPath)}</div>}
-    
     </div>
   );
 }

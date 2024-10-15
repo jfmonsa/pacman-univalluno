@@ -37,7 +37,12 @@ export function usePiggy(
 
     if (useAStar) {
       console.log("Piggy está usando A*");
-      const result = aStar(board, piggyPosition, kermitPosition, hasCookieBoost);
+      const result = aStar(
+        board,
+        piggyPosition,
+        kermitPosition,
+        hasCookieBoost
+      );
       path = result.path;
       tree = result.tree;
     } else {

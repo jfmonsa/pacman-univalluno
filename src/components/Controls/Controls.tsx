@@ -38,9 +38,6 @@ export default function Controls({
 }: ControlsProps) {
   return (
     <>
-      <Button onClick={handleSimulation}>
-        {isSimulating ? "Pause Simulation" : "Start Simulation"}
-      </Button>
       <label>
         Evitar ciclos para DFS?
         <input
@@ -69,6 +66,9 @@ export default function Controls({
           onChange={(e) => setRows(Number(e.target.value))}
         />
       </div>
+      <Button onClick={handleSimulation}>
+        {isSimulating ? "Pause Simulation" : "Start Simulation"}
+      </Button>
       <Button onClick={handleResetBoard}>Regenerar Tablero</Button>
     </>
   );

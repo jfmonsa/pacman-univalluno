@@ -1,31 +1,19 @@
 /* General styles */
 
 body {
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   background: #8ecae6;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  margin: 30px;
-  text-align: center;
+  margin: auto;
   width: 80vw;
-  max-width: 500px;
-  max-height: 500px;
-}
-
-/* Estilo para el select */
-select {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  border: 1px solid rgb(255, 255, 255);
-  border-radius: 4px;
-  margin: 10px 0;
-  font-size: 16px;
+  max-width: 600px;
+  /* max-height: 500px; */
 }
 
 /* Encabezado centrado */

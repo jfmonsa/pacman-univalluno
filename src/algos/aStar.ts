@@ -6,8 +6,7 @@ export function aStar(
   start: positionType,
   goal: positionType,
   hasCookieBoost: boolean
-): { path: positionType[] | null, tree: TreeNode } {
-
+): { path: positionType[] | null; tree: TreeNode } {
   const costMultiplier = hasCookieBoost ? 0.5 : 1; // Costo después de la galleta
   const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Lista de nodos por explorar
   const closedSet = new Set<string>(); // Casillas ya exploradas
@@ -61,11 +60,16 @@ export function aStar(
 
         const neighbor = { row: newRow, col: newCol, g, f };
 
-        if (!openList.some(node => node.row === newRow && node.col === newCol)) {
+        if (
+          !openList.some((node) => node.row === newRow && node.col === newCol)
+        ) {
           openList.push(neighbor);
           cameFrom[key(neighbor)] = current;
 
-          const newNode: TreeNode = { data: { v: key(neighbor) }, children: [] };
+          const newNode: TreeNode = {
+            data: { v: key(neighbor) },
+            children: [],
+          };
           nodeMap.get(key(current))!.children!.push({ node: newNode });
           nodeMap.set(key(neighbor), newNode);
         }

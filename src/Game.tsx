@@ -52,7 +52,7 @@ function Game() {
     wasReset
   );
 
-  const { moveToKermit, piggyTree, piggyPath } = usePiggy(
+  const { moveToKermit, piggyTree, piggyPath, useAStar } = usePiggy(
     piggyPosition,
     setPiggyPosition,
     board,
@@ -93,33 +93,38 @@ function Game() {
     setKermitPosition(findPosition(newBoard, "kermit"));
     setElmoPosition(findPosition(newBoard, "elmo"));
     setPiggyPosition(findPosition(newBoard, "piggy"));
-  }, [rows, cols, wasReset]);
+  }, [rows, cols, wasReset, avoidingLoopsDFS]);
 
   return (
-    <main className="container">
-      <h1>Pacman Univalluno</h1>
-      <Controls
-        {...{
-          isSimulating,
-          handleSimulation,
-          avoidingLoopsDFS,
-          setAvoidingLoopsDFS,
-          rows,
-          setRows,
-          cols,
-          setCols,
-          handleResetBoard,
-        }}
-      />
-      <Board board={board} />
-      <AlgoVisualization
-        {...{
-          kermitTree,
-          kermitPath,
-          piggyTree,
-          piggyPath,
-        }}
-      />
+    <main>
+      <article className="container">
+        <h1>Pacman Univalluno</h1>
+        <Controls
+          {...{
+            isSimulating,
+            handleSimulation,
+            avoidingLoopsDFS,
+            setAvoidingLoopsDFS,
+            rows,
+            setRows,
+            cols,
+            setCols,
+            handleResetBoard,
+          }}
+        />
+        <Board board={board} />
+      </article>
+      <article>
+        <AlgoVisualization
+          {...{
+            kermitTree,
+            kermitPath,
+            piggyTree,
+            piggyPath,
+            piggyStrategy: useAStar ? "A*" : "BFS",
+          }}
+        />
+      </article>
     </main>
   );
 }
