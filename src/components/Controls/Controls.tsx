@@ -37,10 +37,7 @@ export default function Controls({
   handleResetBoard,
 }: ControlsProps) {
   return (
-    <>
-      <Button onClick={handleSimulation}>
-        {isSimulating ? "Pause Simulation" : "Start Simulation"}
-      </Button>
+    <div className={styles.gameControls}>
       <label>
         Evitar ciclos para DFS?
         <input
@@ -53,7 +50,7 @@ export default function Controls({
         <label>Ancho del tablero: {cols}</label>
         <input
           type="range"
-          min="5"
+          min="4"
           max="20"
           value={cols}
           onChange={(e) => setCols(Number(e.target.value))}
@@ -63,13 +60,16 @@ export default function Controls({
         <label>Alto del tablero: {rows}</label>
         <input
           type="range"
-          min="5"
+          min="4"
           max="20"
           value={rows}
           onChange={(e) => setRows(Number(e.target.value))}
         />
       </div>
+      <Button onClick={handleSimulation}>
+        {isSimulating ? "Pause Simulation" : "Start Simulation"}
+      </Button>
       <Button onClick={handleResetBoard}>Regenerar Tablero</Button>
-    </>
+    </div>
   );
 }

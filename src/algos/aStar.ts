@@ -6,8 +6,7 @@ export function aStar(
   start: positionType,
   goal: positionType,
   hasCookieBoost: boolean
-): { path: positionType[] | null, tree: TreeNode } {
-
+): { path: positionType[] | null; tree: TreeNode } {
   const costMultiplier = hasCookieBoost ? 0.5 : 1; // Costo después de la galleta
   const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Lista de nodos por explorar
   const closedSet = new Set<string>(); // Casillas ya exploradas
@@ -37,6 +36,7 @@ export function aStar(
         pos = cameFrom[key(pos)];
       }
       path.reverse();
+      console.log("Camino encontrado:", path);
       return { path, tree };
     }
 
@@ -48,11 +48,14 @@ export function aStar(
       const newCol = current.col + dir.col;
 
       // Verifica los límites del tablero y evita obstáculos
-      if (
+      const isInBounds =
         newRow >= 0 &&
-        newRow < board.length && // Límites de filas
+        newRow < board.length &&
         newCol >= 0 &&
-        newCol < board[0].length && // Límites de columnas
+        newCol < board[0].length;
+
+      if (
+        isInBounds &&
         !closedSet.has(key({ row: newRow, col: newCol })) &&
         board[newRow][newCol] !== "wall" // Evita muros
       ) {
@@ -61,18 +64,22 @@ export function aStar(
 
         const neighbor = { row: newRow, col: newCol, g, f };
 
-        if (!openList.some(node => node.row === newRow && node.col === newCol)) {
+        if (
+          !openList.some((node) => node.row === newRow && node.col === newCol)
+        ) {
           openList.push(neighbor);
           cameFrom[key(neighbor)] = current;
 
-          const newNode: TreeNode = { data: { v: key(neighbor) }, children: [] };
+          const newNode: TreeNode = {
+            data: { v: key(neighbor) },
+            children: [],
+          };
           nodeMap.get(key(current))!.children!.push({ node: newNode });
           nodeMap.set(key(neighbor), newNode);
         }
       }
     }
   }
-
   return { path: null, tree }; // Si no se encuentra camino
 }
 

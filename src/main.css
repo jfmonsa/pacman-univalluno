@@ -1,34 +1,35 @@
 /* General styles */
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #8ecae6;
+  background: #00161f;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  margin: 30px;
-  text-align: center;
+  margin: auto;
   width: 80vw;
-  max-width: 500px;
-  max-height: 500px;
-}
-
-/* Estilo para el select */
-select {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  border: 1px solid rgb(255, 255, 255);
-  border-radius: 4px;
-  margin: 10px 0;
-  font-size: 16px;
 }
 
 /* Encabezado centrado */
 h1 {
   text-align: center;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+li,
+a,
+input,
+button,
+label {
+  color: #fff;
+}
+
+h1 {
+  font-family: "Bungee", sans-serif;
+  font-weight: 400;
 }

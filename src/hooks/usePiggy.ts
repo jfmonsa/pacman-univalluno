@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { cellType, positionType } from "../utils/types";
+import { cellType, positionType, TreeNode } from "../utils/types";
 import { aStar } from "../algos/aStar";
 import { bfs } from "../algos/bfs";
 
@@ -9,9 +9,10 @@ export function usePiggy(
   board: cellType[][],
   kermitPosition: positionType
 ) {
-  // const { position, move } = useAgent(initialPosition, board);
   const [useAStar, setUseAStar] = useState(false);
   const [hasCookieBoost, setHasCookieBoost] = useState(false);
+  const [piggyPath, setPiggyPath] = useState<positionType[]>([]);
+  const [piggyTree, setPiggyTree] = useState<TreeNode | null>(null);
 
   useEffect(() => {
     // Verifica si Kermit está en la posición de la cookie
@@ -33,13 +34,18 @@ export function usePiggy(
     if (useAStar) {
       console.log("Piggy está usando A*");
       // Usa el algoritmo A* para encontrar el camino hacia Kermit
-      const { path, tree } = aStar(board, piggyPosition, kermitPosition, hasCookieBoost);
+      const { path, tree } = aStar(
+        board,
+        piggyPosition,
+        kermitPosition,
+        hasCookieBoost
+      );
+
+      setPiggyTree(tree);
 
       if (path && path.length > 0) {
+        setPiggyPath(path);
         setPiggyPosition(path[0]); // Mueve a Piggy a la siguiente posición en el camino
-
-        localStorage.setItem("treePiggyToKermit", JSON.stringify(tree));
-        localStorage.setItem("pathPiggyToKermit", JSON.stringify(path));
       } else {
         console.warn("No se encontró un camino hacia Kermit con A*.");
       }
@@ -47,16 +53,16 @@ export function usePiggy(
       console.log("Piggy está usando BFS (amplitud)");
       // Implementa la búsqueda en amplitud (BFS) para encontrar a Kermit
       const { path, tree } = bfs(board, piggyPosition, kermitPosition);
+      setPiggyTree(tree);
 
       if (path && path.length > 1) {
         setPiggyPosition(path[1]);
-        localStorage.setItem("treePiggyToKermit", JSON.stringify(tree));
-        localStorage.setItem("pathPiggyToKermit", JSON.stringify(path));
+        setPiggyPath(path);
       } else {
         console.warn("No se encontró un camino hacia Kermit con Amplitud.");
       }
     }
   };
 
-  return { kermitPosition, moveToKermit, useAStar };
+  return { kermitPosition, moveToKermit, piggyTree, piggyPath, useAStar };
 }

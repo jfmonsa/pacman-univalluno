@@ -58,7 +58,7 @@ export function useKermit(
   useEffect(() => {
     setPath([]);
     setStepIndex(0);
-  }, [numberOfCells, wasReset]);
+  }, [numberOfCells, wasReset, avoidingLoopsDFS]);
 
   return {
     moveToElmo,
