@@ -124,11 +124,13 @@ function Game() {
             kermitNnodes,
             kermitPath,
             kermitAlgoTime,
+            kermitPosition,
             piggyTree,
             piggyNnodes,
             piggyPath,
             piggyStrategy: useAStar ? "A*" : "BFS",
             piggyAlgoTime,
+            piggyPosition,
           }}
         />
       </article>

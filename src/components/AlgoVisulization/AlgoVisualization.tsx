@@ -1,6 +1,7 @@
 import "./AlgoVisualization.css";
 import { BeautifulTree } from "@beautiful-tree/react";
 import { positionType, TreeNode } from "../../utils/types";
+import { FormattedPath } from "./FormattedPath";
 
 // helpers
 const getNodeContent = (node: any) => {
@@ -10,13 +11,15 @@ const getNodeContent = (node: any) => {
 interface AlogVisualizationProps {
   kermitTree: TreeNode | null;
   kermitNnodes: number;
-  kermitPath: positionType[] | null;
+  kermitPath: positionType[];
   kermitAlgoTime: number;
+  kermitPosition: positionType;
   piggyTree: TreeNode | null;
   piggyNnodes: number;
-  piggyPath: positionType[] | null;
+  piggyPath: positionType[];
   piggyStrategy: string;
   piggyAlgoTime: number;
+  piggyPosition: positionType;
 }
 
 export default function AlgoVisualization({
@@ -24,11 +27,13 @@ export default function AlgoVisualization({
   kermitNnodes,
   kermitPath,
   kermitAlgoTime,
+  kermitPosition,
   piggyTree,
   piggyNnodes,
   piggyPath,
   piggyStrategy,
   piggyAlgoTime,
+  piggyPosition,
 }: AlogVisualizationProps) {
   return (
     <div>
@@ -39,6 +44,10 @@ export default function AlgoVisualization({
         <li>Nodos: {kermitNnodes}</li>
         <li>Tiempo: {kermitAlgoTime} ms </li>
       </ul>
+      <h4>Camino</h4>
+      {kermitPath && (
+        <FormattedPath path={kermitPath} currentPosition={kermitPosition} />
+      )}
       <h4>Árbol</h4>
       {kermitTree && (
         <BeautifulTree
@@ -55,8 +64,6 @@ export default function AlgoVisualization({
           }}
         />
       )}
-      <h4>Camino</h4>
-      <code>{kermitPath && <div>{JSON.stringify(kermitPath)}</div>}</code>
 
       <h3>Piggy a Kermit</h3>
       <ul>
@@ -64,6 +71,10 @@ export default function AlgoVisualization({
         <li>Nodos: {piggyNnodes}</li>
         <li>Tiempo: {piggyAlgoTime} ms </li>
       </ul>
+      <h4>Camino</h4>
+      {piggyPath && (
+        <FormattedPath path={piggyPath} currentPosition={piggyPosition} />
+      )}
       <h4>Árbol</h4>
       {piggyTree && (
         <BeautifulTree
@@ -80,8 +91,6 @@ export default function AlgoVisualization({
           }}
         />
       )}
-      <h4>Camino</h4>
-      <code>{piggyPath && <div>{JSON.stringify(piggyPath)}</div>}</code>
     </div>
   );
 }

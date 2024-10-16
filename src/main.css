@@ -58,10 +58,14 @@ input,
 button,
 code,
 ul,
-li {
+li,
+span,
+code {
   font-family: "Nunito Sans", sans-serif;
 }
 
-code {
+code,
+span {
+  font-weight: 700;
   color: var(--text);
 }
