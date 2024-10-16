@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { cellType, positionType } from "../utils/types";
 
 export function useBoard(
@@ -8,6 +9,11 @@ export function useBoard(
   elmoPosition: positionType,
   onGameEnd: (reason: string) => void // Callback para detener el juego
 ) {
+  const [kermitPrevPosition, setKermitPrevPosition] =
+    useState<positionType>(kermitPosition);
+  const [piggyPrevPosition, setPiggyPrevPosition] =
+    useState<positionType>(piggyPosition);
+
   const updateBoard = () => {
     const newBoard = board.map((row: cellType[]) => row.slice()); // Crea una copia del tablero
     // Limpia las posiciones anteriores de Kermit y Piggy
@@ -16,6 +22,8 @@ export function useBoard(
         if (cell === "kermit" || cell === "piggy") row[i] = "empty";
       });
     }
+    setKermitPrevPosition(kermitPosition);
+    setPiggyPrevPosition(piggyPosition);
     // Coloca a Kermit, Piggy y Elmo en las posiciones correctas
     newBoard[kermitPosition.row][kermitPosition.col] = "kermit";
     newBoard[piggyPosition.row][piggyPosition.col] = "piggy";
@@ -39,6 +47,17 @@ export function useBoard(
     // validar si kermit y elmo estan en la misma posicion
     if (isKermitAndElmoInSamePosition) {
       onGameEnd("Kermit ha atrapado a Elmo");
+    }
+
+    // check edge case
+    // kermit se cruza de frente con piggy
+    if (
+      kermitPosition.row === piggyPrevPosition.row &&
+      kermitPosition.col === piggyPrevPosition.col &&
+      kermitPrevPosition.row === piggyPosition.row &&
+      kermitPrevPosition.col === piggyPosition.col
+    ) {
+      onGameEnd("Kermit se ha cruzado de frente con Piggy");
     }
   };
 
