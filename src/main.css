@@ -24,7 +24,6 @@ h4,
 p,
 ul,
 li,
-a,
 input,
 button,
 label {
@@ -68,4 +67,12 @@ code,
 span {
   font-weight: 700;
   color: var(--text);
+}
+
+a {
+  color: var(--primary-btn);
+}
+
+footer {
+  text-align: center;
 }

@@ -10,6 +10,7 @@ import "./main.css";
 import Board from "./components/Board/Board";
 import Controls from "./components/Controls/Controls";
 import AlgoVisualization from "./components/AlgoVisulization/AlgoVisualization";
+import Footer from "./components/Footer";
 
 const WALLPERCENTAGE = 0.2; // 20% de las casillas serán paredes
 
@@ -97,12 +98,14 @@ function Game() {
     setKermitPosition(findPosition(newBoard, "kermit"));
     setElmoPosition(findPosition(newBoard, "elmo"));
     setPiggyPosition(findPosition(newBoard, "piggy"));
+    // NOTA: no agrego isSimulating al array de dependencias porque no quiero que se ejecute el useEffect cuando este simulando
+    // seguramente hay mejores formas de hacer esto, pero idk
     // eslint-disable-next-line
   }, [rows, cols, wasReset, avoidingLoopsDFS]);
 
   return (
-    <main>
-      <article className="container">
+    <>
+      <main className="container">
         <h1>Pacman Univalluno</h1>
         <Controls
           {...{
@@ -125,6 +128,9 @@ function Game() {
             kermitPath,
             kermitAlgoTime,
             kermitPosition,
+            kermitStrategy: `DFS ${
+              avoidingLoopsDFS ? "Evitando ciclos" : "Sin evitar ciclos"
+            }`,
             piggyTree,
             piggyNnodes,
             piggyPath,
@@ -133,8 +139,9 @@ function Game() {
             piggyPosition,
           }}
         />
-      </article>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }
 

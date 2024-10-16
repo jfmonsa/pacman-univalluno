@@ -14,6 +14,7 @@ interface AlogVisualizationProps {
   kermitPath: positionType[];
   kermitAlgoTime: number;
   kermitPosition: positionType;
+  kermitStrategy: string;
   piggyTree: TreeNode | null;
   piggyNnodes: number;
   piggyPath: positionType[];
@@ -28,6 +29,7 @@ export default function AlgoVisualization({
   kermitPath,
   kermitAlgoTime,
   kermitPosition,
+  kermitStrategy,
   piggyTree,
   piggyNnodes,
   piggyPath,
@@ -37,14 +39,13 @@ export default function AlgoVisualization({
 }: AlogVisualizationProps) {
   return (
     <div>
-      <h2>Algo Visualization</h2>
-      <h3>Kermit a Elmo</h3>
+      <h2>Visualization: Kermit a Elmo</h2>
       <ul>
-        <li>Algoritmo: DFS Limitado</li>
+        <li>Algoritmo: {kermitStrategy}</li>
         <li>Nodos: {kermitNnodes}</li>
-        <li>Tiempo: {kermitAlgoTime} ms </li>
+        <li>Tiempo de computación: {kermitAlgoTime} ms </li>
       </ul>
-      <h4>Camino</h4>
+      <h3>Camino</h3>
       {kermitPath && (
         <FormattedPath path={kermitPath} currentPosition={kermitPosition} />
       )}
@@ -65,13 +66,13 @@ export default function AlgoVisualization({
         />
       )}
 
-      <h3>Piggy a Kermit</h3>
+      <h2>Visualization: Piggy a Kermit</h2>
       <ul>
         <li>Algoritmo: {piggyStrategy}</li>
         <li>Nodos: {piggyNnodes}</li>
-        <li>Tiempo: {piggyAlgoTime} ms </li>
+        <li>Tiempo de computación: {piggyAlgoTime} ms </li>
       </ul>
-      <h4>Camino</h4>
+      <h3>Camino</h3>
       {piggyPath && (
         <FormattedPath path={piggyPath} currentPosition={piggyPosition} />
       )}
