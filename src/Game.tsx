@@ -118,8 +118,6 @@ function Game() {
           }}
         />
         <Board board={board} />
-      </article>
-      <article>
         <AlgoVisualization
           {...{
             kermitTree,
