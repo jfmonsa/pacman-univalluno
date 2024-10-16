@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { depthLimitedDFS } from "../algos/dfsLimited";
 import { cellType, positionType, TreeNode } from "../utils/types";
+import { TreeBuilder } from "../utils/TreeBuilder";
+import { posToString } from "../utils/posToString";
 
 export function useKermit(
   kermitPosition: positionType,
@@ -30,16 +32,25 @@ export function useKermit(
   useEffect(() => {
     // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
     if (path.length === 0 || stepIndex > path.length) {
+      const timeBegin = performance.now();
+      const start = kermitPosition;
+      const treeBuilder = new TreeBuilder(posToString(start));
+
       const newPath = depthLimitedDFS(
         board,
-        kermitPosition,
+        start,
         elmoPosition,
         DEPTH_LIMIT,
         avoidingLoopsDFS,
-        setKermitTree,
-        setKermitNnodes,
-        setKermitAlgoTime
+        (parentNode, currentPos) => {
+          return treeBuilder.addNode(parentNode, currentPos);
+        }
       );
+      const timeEnd = performance.now();
+
+      setKermitAlgoTime(timeEnd - timeBegin);
+      setKermitNnodes(treeBuilder.getNodeCount());
+      setKermitTree(treeBuilder.getTree());
 
       if (newPath && newPath.length > 1) {
         setPath(newPath); // Establece el nuevo path
