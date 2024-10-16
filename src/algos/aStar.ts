@@ -6,7 +6,12 @@ export function aStar(
   start: positionType,
   goal: positionType,
   hasCookieBoost: boolean
-): { path: positionType[] | null; tree: TreeNode } {
+): {
+  path: positionType[] | null;
+  tree: TreeNode;
+  piggyNnodes: number;
+  piggyAlgoTime: number;
+} {
   const costMultiplier = hasCookieBoost ? 0.5 : 1; // Costo después de la galleta
   const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Lista de nodos por explorar
   const closedSet = new Set<string>(); // Casillas ya exploradas
@@ -19,6 +24,9 @@ export function aStar(
   const key = (pos: { row: number; col: number }) => `${pos.row},${pos.col}`; // Llave única para cada casilla
 
   const tree: TreeNode = { data: { v: key(start) }, children: [] };
+  let piggyNnodes = 1;
+  const beginTime = Date.now();
+
   const nodeMap = new Map<string, TreeNode>();
   nodeMap.set(key(start), tree);
 
@@ -36,8 +44,7 @@ export function aStar(
         pos = cameFrom[key(pos)];
       }
       path.reverse();
-      console.log("Camino encontrado:", path);
-      return { path, tree };
+      return { path, tree, piggyNnodes, piggyAlgoTime: Date.now() - beginTime };
     }
 
     closedSet.add(key(current));
@@ -74,13 +81,19 @@ export function aStar(
             data: { v: key(neighbor) },
             children: [],
           };
+          piggyNnodes++;
           nodeMap.get(key(current))!.children!.push({ node: newNode });
           nodeMap.set(key(neighbor), newNode);
         }
       }
     }
   }
-  return { path: null, tree }; // Si no se encuentra camino
+  return {
+    path: null,
+    tree,
+    piggyNnodes,
+    piggyAlgoTime: Date.now() - beginTime,
+  }; // Si no se encuentra camino
 }
 
 function manhattanDistance(pos1: positionType, pos2: positionType): number {

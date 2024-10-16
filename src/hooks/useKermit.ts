@@ -16,6 +16,8 @@ export function useKermit(
   const DEPTH_LIMIT = Math.floor(numberOfCells / 2);
   // aux data structures for algo visualization
   const [kermitTree, setKermitTree] = useState<TreeNode | null>(null);
+  const [kermitNnodes, setKermitNnodes] = useState(0);
+  const [kermitAlgoTime, setKermitAlgoTime] = useState(0);
 
   const moveToElmo = () => {
     // Si hay un path calculado, mover a Kermit al siguiente paso en el camino
@@ -27,21 +29,25 @@ export function useKermit(
 
   useEffect(() => {
     // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
-    if (path.length === 0 || stepIndex >= path.length) {
+    if (path.length === 0 || stepIndex > path.length) {
       const newPath = depthLimitedDFS(
         board,
         kermitPosition,
         elmoPosition,
         DEPTH_LIMIT,
         avoidingLoopsDFS,
-        setKermitTree
+        setKermitTree,
+        setKermitNnodes,
+        setKermitAlgoTime
       );
 
       if (newPath && newPath.length > 1) {
         setPath(newPath); // Establece el nuevo path
         setStepIndex(1); // Inicia desde el primer paso
       } else {
-        //alert("Kermint no encontró un camino a elmo, revisar la profundidad");
+        alert(
+          `Kermint no encontró un camino a elmo, revisar la profundidad, ${DEPTH_LIMIT}`
+        );
       }
     }
   }, [
@@ -63,6 +69,8 @@ export function useKermit(
   return {
     moveToElmo,
     kermitTree,
+    kermitNnodes,
     kermitPath: path,
+    kermitAlgoTime,
   };
 }

@@ -1,7 +1,13 @@
-/* General styles */
+/* Variables */
+:root {
+  --text: #fff;
+  --bg: #00161f;
+  --primary-btn: #8ecae6;
+}
 
+/* General styles */
 body {
-  background: #00161f;
+  background: var(--bg);
   margin: 0;
   padding: 0;
 }
@@ -11,14 +17,10 @@ body {
   width: 80vw;
 }
 
-/* Encabezado centrado */
-h1 {
-  text-align: center;
-}
-
 h1,
 h2,
 h3,
+h4,
 p,
 ul,
 li,
@@ -26,10 +28,31 @@ a,
 input,
 button,
 label {
-  color: #fff;
+  color: var(--text);
 }
 
 h1 {
-  font-family: "Bungee", sans-serif;
+  text-align: center;
+  font-family: "Holtwood One SC", serif;
   font-weight: 400;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Pridi", serif;
+}
+
+p,
+label,
+input,
+button,
+code {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+code {
+  color: var(--text);
 }

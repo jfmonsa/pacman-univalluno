@@ -42,22 +42,25 @@ function Game() {
     findPosition(board, "elmo")
   );
 
-  const { moveToElmo, kermitPath, kermitTree } = useKermit(
-    kermitPosition,
-    setKermitPosition,
-    board,
-    elmoPosition,
-    avoidingLoopsDFS,
-    rows * cols,
-    wasReset
-  );
+  const { moveToElmo, kermitPath, kermitTree, kermitNnodes, kermitAlgoTime } =
+    useKermit(
+      kermitPosition,
+      setKermitPosition,
+      board,
+      elmoPosition,
+      avoidingLoopsDFS,
+      rows * cols,
+      wasReset
+    );
 
-  const { moveToKermit, piggyTree, piggyPath, useAStar } = usePiggy(
-    piggyPosition,
-    setPiggyPosition,
-    board,
-    kermitPosition
-  );
+  const {
+    moveToKermit,
+    piggyTree,
+    piggyNnodes,
+    piggyPath,
+    useAStar,
+    piggyAlgoTime,
+  } = usePiggy(piggyPosition, setPiggyPosition, board, kermitPosition);
 
   const { updateBoard } = useBoard(
     board,
@@ -88,11 +91,13 @@ function Game() {
   };
 
   useEffect(() => {
+    if (isSimulating) setIsSimulating(!isSimulating);
     const newBoard = generateRandomBoard(rows, cols, WALLPERCENTAGE);
     setBoard(newBoard);
     setKermitPosition(findPosition(newBoard, "kermit"));
     setElmoPosition(findPosition(newBoard, "elmo"));
     setPiggyPosition(findPosition(newBoard, "piggy"));
+    // eslint-disable-next-line
   }, [rows, cols, wasReset, avoidingLoopsDFS]);
 
   return (
@@ -118,10 +123,14 @@ function Game() {
         <AlgoVisualization
           {...{
             kermitTree,
+            kermitNnodes,
             kermitPath,
+            kermitAlgoTime,
             piggyTree,
+            piggyNnodes,
             piggyPath,
             piggyStrategy: useAStar ? "A*" : "BFS",
+            piggyAlgoTime,
           }}
         />
       </article>

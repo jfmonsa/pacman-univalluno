@@ -8,14 +8,19 @@ export function depthLimitedDFS(
   goal: positionType,
   depthLimit: number,
   avoidingLoopsDFS: boolean,
-  setKermitTree: (tree: TreeNode) => void
+  setKermitTree: (tree: TreeNode) => void,
+  setKermitNnodes: (n: number) => void,
+  setKermitAlgoTime: (time: number) => void
 ): positionType[] | null {
   // Estructura de datos para evitar posiciones ya visitadas
 
   const posToString = (pos: { row: number; col: number }) =>
     `${pos.row},${pos.col}`;
 
+  const timeBegin = Date.now();
+  let kermitNnodes = 1;
   const tree: TreeNode = { data: { v: posToString(start) }, children: [] };
+
   const visited = new Set<string>();
 
   function dfs(
@@ -61,9 +66,9 @@ export function depthLimitedDFS(
 
         // Anotar en el padre el enlace al nuevo hijo
         parentNode?.children!.push({
-          //eData: { e: 1 },
           node: childNode,
         });
+        kermitNnodes++;
 
         // hacer llamado recursivo por cada hijo (movimiento que cumple con las condiciones)
         const path = dfs(nextPos, depth + 1, childNode);
@@ -77,6 +82,10 @@ export function depthLimitedDFS(
   }
 
   const path = dfs(start, 0, tree);
+  const timeEnd = Date.now();
+  setKermitAlgoTime(timeEnd - timeBegin);
+
+  setKermitNnodes(kermitNnodes);
   setKermitTree(tree);
   return path;
 }

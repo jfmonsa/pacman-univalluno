@@ -1,29 +1,39 @@
 .gameControls {
-  /* display: flex;
-  flex-direction: column; */
   margin: 20px auto;
   width: 100%;
   min-width: 300px;
   max-width: 600px;
 }
+label {
+  padding-left: 20px;
+}
 
 input {
   margin-left: 20px;
+  margin-top: 8px;
 }
 
 /* For button */
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
 button {
-  position: relative;
-  margin: 30px;
-  padding: 10px 20px;
-  border-radius: 7px;
-  border: 1px solid rgb(0, 0, 0);
-  font-size: 14px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 200px;
+  border-radius: 8px;
+  border: 2px solid rgb(0, 0, 0);
+  font-size: 16px;
   text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 2px;
-  background: rgba(0, 0, 0, 0.31);
-  color: #fff;
+  font-weight: 800;
+  background: var(--primary-btn);
+  color: var(--bg);
   overflow: hidden;
   box-shadow: 0 0 0 0 transparent;
   transition: all 0.2s ease-in;
@@ -31,22 +41,7 @@ button {
 }
 
 button:hover {
-  background: rgb(0, 0, 0);
   box-shadow: 0 0 30px 5px rgba(204, 195, 195, 0.815);
-}
-
-button::before {
-  content: "";
-  display: block;
-  width: 0px;
-  height: 86%;
-  position: absolute;
-  top: 7%;
-  left: 0%;
-  opacity: 0;
-  background: #fff;
-  box-shadow: 0 0 50px 30px #fff;
-  transform: skewX(-20deg);
 }
 
 button:hover::before {

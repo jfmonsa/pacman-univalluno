@@ -1,0 +1,9 @@
+svg line {
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+svg div {
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 600;
+}

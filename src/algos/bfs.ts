@@ -5,10 +5,20 @@ export function bfs(
   board: cellType[][],
   start: positionType,
   goal: positionType
-): { path: positionType[] | null, tree: TreeNode } {
+): {
+  path: positionType[] | null;
+  tree: TreeNode;
+  piggyNnodes: number;
+  piggyAlgoTime: number;
+} {
   const queue = [[start]]; // La cola almacena rutas completas
   const visited = new Set([`${start.row},${start.col}`]);
+
   const tree: TreeNode = { data: { v: posToString(start) }, children: [] };
+  let piggyNnodes = 1;
+
+  const beginTime = Date.now();
+
   const nodeMap = new Map<string, TreeNode>();
   nodeMap.set(`${start.row},${start.col}`, tree);
 
@@ -19,7 +29,7 @@ export function bfs(
 
     // Si Piggy ha alcanzado a Kermit, retorna el camino y el árbol
     if (row === goal.row && col === goal.col) {
-      return { path, tree };
+      return { path, tree, piggyNnodes, piggyAlgoTime: Date.now() - beginTime };
     }
 
     // Explora las direcciones en el orden definido
@@ -37,15 +47,24 @@ export function bfs(
         board[newRow][newCol] !== "wall" // Evita muros
       ) {
         visited.add(`${newRow},${newCol}`);
-        const newNode: TreeNode = { data: { v: posToString({ row: newRow, col: newCol }) }, children: [] };
+        const newNode: TreeNode = {
+          data: { v: posToString({ row: newRow, col: newCol }) },
+          children: [],
+        };
         currentNode!.children!.push({ node: newNode });
+        piggyNnodes++;
         nodeMap.set(`${newRow},${newCol}`, newNode);
         queue.push([...path, { row: newRow, col: newCol }]); // Agrega la nueva ruta a la cola
       }
     }
   }
 
-  return { path: null, tree }; // Si no se encuentra camino
+  return {
+    path: null,
+    tree,
+    piggyNnodes,
+    piggyAlgoTime: Date.now() - beginTime,
+  }; // Si no se encuentra camino
 }
 
 function posToString(pos: positionType): string {

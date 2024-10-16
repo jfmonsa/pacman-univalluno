@@ -12,7 +12,10 @@ export function usePiggy(
   const [useAStar, setUseAStar] = useState(false);
   const [hasCookieBoost, setHasCookieBoost] = useState(false);
   const [piggyPath, setPiggyPath] = useState<positionType[]>([]);
+  // tree for algo visualization
   const [piggyTree, setPiggyTree] = useState<TreeNode | null>(null);
+  const [piggyNnodes, setPiggyNnodes] = useState(0);
+  const [piggyAlgoTime, setPiggyAlgoTime] = useState(0);
 
   useEffect(() => {
     // Verifica si Kermit está en la posición de la cookie
@@ -32,9 +35,7 @@ export function usePiggy(
 
   const moveToKermit = () => {
     if (useAStar) {
-      console.log("Piggy está usando A*");
-      // Usa el algoritmo A* para encontrar el camino hacia Kermit
-      const { path, tree } = aStar(
+      const { path, tree, piggyNnodes, piggyAlgoTime } = aStar(
         board,
         piggyPosition,
         kermitPosition,
@@ -42,6 +43,8 @@ export function usePiggy(
       );
 
       setPiggyTree(tree);
+      setPiggyNnodes(piggyNnodes);
+      setPiggyAlgoTime(piggyAlgoTime);
 
       if (path && path.length > 0) {
         setPiggyPath(path);
@@ -50,10 +53,14 @@ export function usePiggy(
         console.warn("No se encontró un camino hacia Kermit con A*.");
       }
     } else {
-      console.log("Piggy está usando BFS (amplitud)");
-      // Implementa la búsqueda en amplitud (BFS) para encontrar a Kermit
-      const { path, tree } = bfs(board, piggyPosition, kermitPosition);
+      const { path, tree, piggyNnodes, piggyAlgoTime } = bfs(
+        board,
+        piggyPosition,
+        kermitPosition
+      );
+      setPiggyAlgoTime(piggyAlgoTime);
       setPiggyTree(tree);
+      setPiggyNnodes(piggyNnodes);
 
       if (path && path.length > 1) {
         setPiggyPosition(path[1]);
@@ -64,5 +71,13 @@ export function usePiggy(
     }
   };
 
-  return { kermitPosition, moveToKermit, piggyTree, piggyPath, useAStar };
+  return {
+    kermitPosition,
+    moveToKermit,
+    piggyTree,
+    piggyPath,
+    useAStar,
+    piggyNnodes,
+    piggyAlgoTime,
+  };
 }

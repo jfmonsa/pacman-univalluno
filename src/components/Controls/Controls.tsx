@@ -66,10 +66,12 @@ export default function Controls({
           onChange={(e) => setRows(Number(e.target.value))}
         />
       </div>
-      <Button onClick={handleSimulation}>
-        {isSimulating ? "Pause Simulation" : "Start Simulation"}
-      </Button>
-      <Button onClick={handleResetBoard}>Regenerar Tablero</Button>
+      <div className={styles.buttonContainer}>
+        <Button onClick={handleSimulation}>
+          {isSimulating ? "Pausar" : "Comenzar"}
+        </Button>
+        <Button onClick={handleResetBoard}>Regenerar</Button>
+      </div>
     </div>
   );
 }
