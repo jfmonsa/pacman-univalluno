@@ -17,7 +17,7 @@ export function useKermit(
   const [stepIndex, setStepIndex] = useState(0);
   const DEPTH_LIMIT = Math.floor(numberOfCells / 2);
 
-  // for algo visualization
+  // For the algorithm visualization
   const [algoStateVisualization, setAlgoStateVisualization] = useState({
     tree: null as TreeNode | null,
     nodeCount: 0,
@@ -60,7 +60,7 @@ export function useKermit(
     setStepIndex(0);
   }, []);
 
-  // Move kermit to next position in path
+  // Move Kermit to the next position in the path
   const moveToElmo = () => {
     if (path.length > 1 && stepIndex < path.length) {
       setKermitPosition(path[stepIndex]);
@@ -68,7 +68,7 @@ export function useKermit(
     }
   };
 
-  // Calc new path if paht is empty or stepIndex is out of bounds
+  // Calculate a new path if current is empty or stepIndex is out of bounds
   useEffect(() => {
     if (path.length === 0 || stepIndex > path.length) {
       calculateNewPath();
@@ -84,7 +84,7 @@ export function useKermit(
     calculateNewPath,
   ]);
 
-  // Clear path if board is reset
+  // Clears the path if the board is reset
   useEffect(() => {
     resetPathState();
   }, [numberOfCells, isBoardReset, avoidingLoopsDFS, resetPathState]);

@@ -11,7 +11,7 @@ export function bfs(
   piggyNnodes: number;
   piggyAlgoTime: number;
 } {
-  const queue = [[start]]; // La cola almacena rutas completas
+  const queue = [[start]]; // The queue stores full paths
   const visited = new Set([`${start.row},${start.col}`]);
 
   const tree: TreeNode = { data: { v: posToString(start) }, children: [] };
@@ -27,24 +27,24 @@ export function bfs(
     const { row, col } = path[path.length - 1];
     const currentNode = nodeMap.get(`${row},${col}`);
 
-    // Si Piggy ha alcanzado a Kermit, retorna el camino y el árbol
+    // If Piggy reaches Kermit, returns both the path and the tree
     if (row === goal.row && col === goal.col) {
       return { path, tree, piggyNnodes, piggyAlgoTime: Date.now() - beginTime };
     }
 
-    // Explora las direcciones en el orden definido
+    // Explores the directions in the defined order
     for (const dir of operatorsOrder) {
       const newRow = row + dir.row;
       const newCol = col + dir.col;
 
-      // Verifica los límites del tablero y evita obstáculos
+      // Checks if the new position is within the board and is not an obstacle 
       if (
         newRow >= 0 &&
-        newRow < board.length && // Límites de filas
+        newRow < board.length && // Row limits
         newCol >= 0 &&
-        newCol < board[0].length && // Límites de columnas
+        newCol < board[0].length && // Column limits
         !visited.has(`${newRow},${newCol}`) &&
-        board[newRow][newCol] !== "wall" // Evita muros
+        board[newRow][newCol] !== "wall" // Avoids walls
       ) {
         visited.add(`${newRow},${newCol}`);
         const newNode: TreeNode = {
@@ -54,7 +54,7 @@ export function bfs(
         currentNode!.children!.push({ node: newNode });
         piggyNnodes++;
         nodeMap.set(`${newRow},${newCol}`, newNode);
-        queue.push([...path, { row: newRow, col: newCol }]); // Agrega la nueva ruta a la cola
+        queue.push([...path, { row: newRow, col: newCol }]); // Adds the new path to the queue
       }
     }
   }
@@ -64,7 +64,7 @@ export function bfs(
     tree,
     piggyNnodes,
     piggyAlgoTime: Date.now() - beginTime,
-  }; // Si no se encuentra camino
+  }; // If there is no path
 }
 
 function posToString(pos: positionType): string {

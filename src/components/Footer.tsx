@@ -7,11 +7,11 @@ export default function Footer() {
         <a href="https://github.com/jfmonsa/pacman-univalluno">aquí</a>
       </p>
       <p>
-        Made with{" "}
+        Hecho con{" "}
         <span role="img" aria-label="heart">
           ❤️
         </span>{" "}
-        by{" "}
+        por{" "}
         <a href="https://github.com/jfmonsa" target="_blank">
           @jfmonsa
         </a>

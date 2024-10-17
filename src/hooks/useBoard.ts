@@ -7,7 +7,7 @@ export function useBoard(
   kermitPosition: positionType,
   piggyPosition: positionType,
   elmoPosition: positionType,
-  onGameEnd: (reason: string) => void // Callback para detener el juego
+  onGameEnd: (reason: string) => void // Callback for stopping the game
 ) {
   const [kermitPrevPosition, setKermitPrevPosition] =
     useState<positionType>(kermitPosition);
@@ -15,8 +15,8 @@ export function useBoard(
     useState<positionType>(piggyPosition);
 
   const updateBoard = () => {
-    const newBoard = board.map((row: cellType[]) => row.slice()); // Crea una copia del tablero
-    // Limpia las posiciones anteriores de Kermit y Piggy
+    const newBoard = board.map((row: cellType[]) => row.slice()); // Creates a copy of the board
+    // Clears the previous positions of Kermit and Piggy
     for (const row of newBoard) {
       row.forEach((cell: cellType, i: number) => {
         if (cell === "kermit" || cell === "piggy") row[i] = "empty";
@@ -24,14 +24,14 @@ export function useBoard(
     }
     setKermitPrevPosition(kermitPosition);
     setPiggyPrevPosition(piggyPosition);
-    // Coloca a Kermit, Piggy y Elmo en las posiciones correctas
+    // Puts Kermit, Piggy and Elmo in their new positions
     newBoard[kermitPosition.row][kermitPosition.col] = "kermit";
     newBoard[piggyPosition.row][piggyPosition.col] = "piggy";
     newBoard[elmoPosition.row][elmoPosition.col] = "elmo";
     setBoard(newBoard);
 
     // endGame
-    // validar si kermit y piggy estan en la misma posicion
+    // Checks if Kermit and Piggy are in the same position
     const isKermitAndPiggyInSamePosition =
       kermitPosition.row === piggyPosition.row &&
       kermitPosition.col === piggyPosition.col;
@@ -44,13 +44,13 @@ export function useBoard(
       onGameEnd("Piggy ha atrapado a Kermit");
     }
 
-    // validar si kermit y elmo estan en la misma posicion
+    // Checks if Kermit and Elmo are in the same position
     if (isKermitAndElmoInSamePosition) {
       onGameEnd("Kermit ha atrapado a Elmo");
     }
 
-    // check edge case
-    // kermit se cruza de frente con piggy
+    // Edge case check:
+    // Checks if Kermit and Piggy have crossed paths
     if (
       kermitPosition.row === piggyPrevPosition.row &&
       kermitPosition.col === piggyPrevPosition.col &&

@@ -14,7 +14,7 @@ export const FormattedPath = ({
         const isCurrentPosition =
           currentPosition.row === pos.row && currentPosition.col === pos.col;
 
-        // Devuelve el nodo como JSX, incluyendo un span para la posición actual
+        // Returns the node as JSX, including an <span> for the current position
         return (
           <span key={index}>
             {isCurrentPosition ? (

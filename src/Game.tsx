@@ -6,13 +6,14 @@ import { cellType } from "./utils/types";
 import { findPosition } from "./utils/findAgentPosition";
 import { generateRandomBoard } from "./utils/generateRandomBoard";
 import "./main.css";
+
 // Components
 import Board from "./components/Board/Board";
 import Controls from "./components/Controls/Controls";
 import AlgoVisualization from "./components/AlgoVisulization/AlgoVisualization";
 import Footer from "./components/Footer";
 
-const WALLPERCENTAGE = 0.2; // 20% de las casillas serán paredes
+const WALLPERCENTAGE = 0.2; // 20% of the board will be walls
 
 function Game() {
   const [rows, setRows] = useState(4);
@@ -32,7 +33,7 @@ function Game() {
     setIsSimulating(false);
   };
 
-  // Hooks Y estados para los personajes
+  // Hooks and states for the agents
   const [kermitPosition, setKermitPosition] = useState(() =>
     findPosition(board, "kermit")
   );
@@ -72,7 +73,7 @@ function Game() {
     handleGameEnd
   );
 
-  // Simular movimientos
+  // Simulate movements
   useEffect(() => {
     if (!isSimulating) return;
     const interval = setInterval(() => {
@@ -83,7 +84,7 @@ function Game() {
     return () => clearInterval(interval);
   }, [isSimulating, moveToElmo, moveToKermit, updateBoard]);
 
-  // Manejar la simulación
+  // Simulation handling
   const handleSimulation = () => setIsSimulating(!isSimulating);
 
   // handleResetBoard + useEffect
@@ -98,8 +99,8 @@ function Game() {
     setKermitPosition(findPosition(newBoard, "kermit"));
     setElmoPosition(findPosition(newBoard, "elmo"));
     setPiggyPosition(findPosition(newBoard, "piggy"));
-    // NOTA: no agrego isSimulating al array de dependencias porque no quiero que se ejecute el useEffect cuando este simulando
-    // seguramente hay mejores formas de hacer esto, pero idk
+    // NOTE: I didn't add isSimulating to the dependency array because I don't want the useEffect to run when it's simulating
+    // There are probably better ways to do this, but idk
     // eslint-disable-next-line
   }, [rows, cols, wasReset, avoidingLoopsDFS]);
 

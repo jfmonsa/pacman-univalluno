@@ -12,13 +12,13 @@ export function usePiggy(
   const [useAStar, setUseAStar] = useState(false);
   const [hasCookieBoost, setHasCookieBoost] = useState(false);
   const [piggyPath, setPiggyPath] = useState<positionType[]>([]);
-  // tree for algo visualization
+  // Tree for algorithm visualization
   const [piggyTree, setPiggyTree] = useState<TreeNode | null>(null);
   const [piggyNnodes, setPiggyNnodes] = useState(0);
   const [piggyAlgoTime, setPiggyAlgoTime] = useState(0);
 
   useEffect(() => {
-    // Verifica si Kermit está en la posición de la cookie
+    // Checks if Piggy is in the same position as the cookie
     if (board[piggyPosition.row][piggyPosition.col] === "cookie") {
       setHasCookieBoost(true);
     }
@@ -48,7 +48,7 @@ export function usePiggy(
 
       if (path && path.length > 0) {
         setPiggyPath(path);
-        setPiggyPosition(path[0]); // Mueve a Piggy a la siguiente posición en el camino
+        setPiggyPosition(path[0]); // Moves Piggy to the next position in the path
       } else {
         console.warn("No se encontró un camino hacia Kermit con A*.");
       }

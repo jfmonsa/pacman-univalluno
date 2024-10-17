@@ -11,7 +11,7 @@
 }
 .cell {
   flex: 1;
-  aspect-ratio: 1; /* asegura que la celda siempre sea cuadrada */
+  aspect-ratio: 1; /* Makes sure the cell is always squared */
   border: 1px solid #000;
   display: flex;
   align-items: center;
@@ -19,7 +19,7 @@
   background-color: #f0f0f0;
 }
 
-/* for board characters */
+/* For board characters */
 .cell.kermit {
   background-color: #7fc97f;
 }
@@ -39,7 +39,8 @@
 .cell.empty {
   background-color: #fff;
 }
-/* for walls */
+
+/* For walls */
 .cell.wall {
   background-color: #312c2cd3;
 }

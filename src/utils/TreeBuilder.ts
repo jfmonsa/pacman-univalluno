@@ -1,6 +1,6 @@
 import { TreeNode } from "../utils/types";
 
-/**  Class to handle Tree construction for algo visualization*/
+/**  Class to handle the tree construction for the algorithm visualization*/
 export class TreeBuilder {
   private tree: TreeNode;
   private nodeCount: number;
@@ -14,7 +14,7 @@ export class TreeBuilder {
     const newNode = { data: { v: newNodeData }, children: [] };
 
     if (parentNode === null) {
-      // iff we are dealing with root node
+      // If we are dealing with the root node
       this.tree.children!.push({ node: newNode });
     } else {
       parentNode!.children!.push({ node: newNode });

@@ -1,4 +1,3 @@
-// src/utils/boardUtils.ts
 import { cellType } from "./types";
 
 export function generateRandomBoard(rows: number, cols: number, wallPercentage: number): cellType[][] {

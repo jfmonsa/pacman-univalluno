@@ -3,7 +3,7 @@ import { BeautifulTree } from "@beautiful-tree/react";
 import { positionType, TreeNode } from "../../utils/types";
 import { FormattedPath } from "./FormattedPath";
 
-// helpers
+// Helpers
 const getNodeContent = (node: any) => {
   return node.v || "Node";
 };

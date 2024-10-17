@@ -12,16 +12,16 @@ export function aStar(
   piggyNnodes: number;
   piggyAlgoTime: number;
 } {
-  const costMultiplier = hasCookieBoost ? 0.5 : 1; // Costo después de la galleta
-  const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Lista de nodos por explorar
-  const closedSet = new Set<string>(); // Casillas ya exploradas
+  const costMultiplier = hasCookieBoost ? 0.5 : 1; // Cost after the cookie boost
+  const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Node list to explore
+  const closedSet = new Set<string>(); // Visited nodes
 
   const cameFrom: Record<
     string,
     { row: number; col: number; g: number; f: number }
-  > = {}; // Para reconstruir el camino
+  > = {}; // For reconstructing the path
 
-  const key = (pos: { row: number; col: number }) => `${pos.row},${pos.col}`; // Llave única para cada casilla
+  const key = (pos: { row: number; col: number }) => `${pos.row},${pos.col}`; // Unique key for each node
 
   const tree: TreeNode = { data: { v: key(start) }, children: [] };
   let piggyNnodes = 1;
@@ -31,11 +31,11 @@ export function aStar(
   nodeMap.set(key(start), tree);
 
   while (openList.length > 0) {
-    // Ordena la lista abierta por el valor f (g + heurística)
+    // Sorts the opened nodes list by the value f = (g + heuristic)
     openList.sort((a, b) => a.f - b.f);
-    const current = openList.shift()!; // El nodo con el valor f más bajo
+    const current = openList.shift()!; // Gets the node with the lowest f value
 
-    // Si Piggy ha llegado a Kermit (el objetivo)
+    // If Piggy reaches Kermit (the goal)
     if (current.row === goal.row && current.col === goal.col) {
       const path = [];
       let pos = current;
@@ -49,12 +49,12 @@ export function aStar(
 
     closedSet.add(key(current));
 
-    // Explora las direcciones en el orden definido
+    // Explores the directions in the defined order
     for (const dir of operatorsOrder) {
       const newRow = current.row + dir.row;
       const newCol = current.col + dir.col;
 
-      // Verifica los límites del tablero y evita obstáculos
+      // Checks if the new position is within the board and is not an obstacle
       const isInBounds =
         newRow >= 0 &&
         newRow < board.length &&
@@ -64,7 +64,7 @@ export function aStar(
       if (
         isInBounds &&
         !closedSet.has(key({ row: newRow, col: newCol })) &&
-        board[newRow][newCol] !== "wall" // Evita muros
+        board[newRow][newCol] !== "wall" // Avoids walls
       ) {
         const g = current.g + 1 * costMultiplier;
         const f = g + manhattanDistance({ row: newRow, col: newCol }, goal);
@@ -93,7 +93,7 @@ export function aStar(
     tree,
     piggyNnodes,
     piggyAlgoTime: Date.now() - beginTime,
-  }; // Si no se encuentra camino
+  }; // If there is no path
 }
 
 function manhattanDistance(pos1: positionType, pos2: positionType): number {

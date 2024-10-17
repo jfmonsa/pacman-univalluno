@@ -3,7 +3,6 @@ import { posToString } from "../utils/posToString";
 import { cellType, positionType } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
 
-// DFS limitado por profundidad
 export function depthLimitedDFS(
   board: cellType[][],
   start: positionType,
@@ -19,13 +18,13 @@ export function depthLimitedDFS(
     depth: number,
     parentNode: any
   ): positionType[] | null {
-    // base case
+    // Base case
     if (depth > depthLimit) return null;
     if (current.row === goal.row && current.col === goal.col) return [current];
 
     visited.add(posToString(current));
 
-    // recusive cases
+    // Recusive cases
     for (const move of operatorsOrder) {
       const nextPos = {
         row: current.row + move.row,
@@ -39,7 +38,7 @@ export function depthLimitedDFS(
       ) {
         let nextParentNode = parentNode;
 
-        // if callback is provided, call it to construct algo tree
+        // If callback is provided, it will be called to construct the tree
         if (callback) {
           nextParentNode = callback(parentNode, posToString(nextPos));
         }
