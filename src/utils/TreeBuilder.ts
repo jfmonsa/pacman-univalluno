@@ -1,6 +1,6 @@
 import { TreeNode } from "../utils/types";
 
-/**  Clase para manejar la construcción del árbol*/
+/**  Class to handle Tree construction for algo visualization*/
 export class TreeBuilder {
   private tree: TreeNode;
   private nodeCount: number;
@@ -10,9 +10,16 @@ export class TreeBuilder {
     this.nodeCount = 1;
   }
 
-  addNode(parentNode: TreeNode, newNodeData: string): TreeNode {
-    const newNode: TreeNode = { data: { v: newNodeData }, children: [] };
-    parentNode?.children!.push({ node: newNode });
+  addNode(parentNode: TreeNode | null, newNodeData: string): TreeNode | null {
+    const newNode = { data: { v: newNodeData }, children: [] };
+
+    if (parentNode === null) {
+      // iff we are dealing with root node
+      this.tree.children!.push({ node: newNode });
+    } else {
+      parentNode!.children!.push({ node: newNode });
+    }
+
     this.nodeCount++;
     return newNode;
   }

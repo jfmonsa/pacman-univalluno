@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { depthLimitedDFS } from "../algos/dfsLimited";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { TreeBuilder } from "../utils/TreeBuilder";
@@ -11,77 +11,89 @@ export function useKermit(
   elmoPosition: positionType,
   avoidingLoopsDFS: boolean,
   numberOfCells: number,
-  wasReset: boolean
+  isBoardReset: boolean
 ) {
-  const [path, setPath] = useState<positionType[]>([]); // Almacena el camino calculado
-  const [stepIndex, setStepIndex] = useState(0); // Índice para seguir el camino
+  const [path, setPath] = useState<positionType[]>([]);
+  const [stepIndex, setStepIndex] = useState(0);
   const DEPTH_LIMIT = Math.floor(numberOfCells / 2);
-  // aux data structures for algo visualization
-  const [kermitTree, setKermitTree] = useState<TreeNode | null>(null);
-  const [kermitNnodes, setKermitNnodes] = useState(0);
-  const [kermitAlgoTime, setKermitAlgoTime] = useState(0);
 
+  // for algo visualization
+  const [algoStateVisualization, setAlgoStateVisualization] = useState({
+    tree: null as TreeNode | null,
+    nodeCount: 0,
+    algoTime: 0,
+  });
+
+  const calculateNewPath = useCallback(() => {
+    const start = kermitPosition;
+    const treeBuilder = new TreeBuilder(posToString(start));
+
+    const timeBegin = performance.now();
+    const newPath = depthLimitedDFS(
+      board,
+      start,
+      elmoPosition,
+      DEPTH_LIMIT,
+      avoidingLoopsDFS,
+      (parentNode, currentPos) => treeBuilder.addNode(parentNode, currentPos)
+    );
+    const timeEnd = performance.now();
+
+    setAlgoStateVisualization({
+      tree: treeBuilder.getTree(),
+      nodeCount: treeBuilder.getNodeCount(),
+      algoTime: timeEnd - timeBegin,
+    });
+
+    if (newPath && newPath.length > 1) {
+      setPath(newPath);
+      setStepIndex(1);
+    } else {
+      console.warn(
+        `Kermit no encontró un camino a Elmo. Verifica la profundidad: ${DEPTH_LIMIT}`
+      );
+    }
+  }, [elmoPosition, avoidingLoopsDFS, DEPTH_LIMIT, board, kermitPosition]);
+
+  const resetPathState = useCallback(() => {
+    setPath([]);
+    setStepIndex(0);
+  }, []);
+
+  // Move kermit to next position in path
   const moveToElmo = () => {
-    // Si hay un path calculado, mover a Kermit al siguiente paso en el camino
     if (path.length > 1 && stepIndex < path.length) {
-      setKermitPosition(path[stepIndex]); // Mueve a Kermit a la siguiente posición
-      setStepIndex(stepIndex + 1); // Avanza el índice del camino
+      setKermitPosition(path[stepIndex]);
+      setStepIndex(stepIndex + 1);
     }
   };
 
+  // Calc new path if paht is empty or stepIndex is out of bounds
   useEffect(() => {
-    // Recalcula el path solo si estamos al inicio (posición inicial o sin path) o si se llega a Elmo
     if (path.length === 0 || stepIndex > path.length) {
-      const timeBegin = performance.now();
-      const start = kermitPosition;
-      const treeBuilder = new TreeBuilder(posToString(start));
-
-      const newPath = depthLimitedDFS(
-        board,
-        start,
-        elmoPosition,
-        DEPTH_LIMIT,
-        avoidingLoopsDFS,
-        (parentNode, currentPos) => {
-          return treeBuilder.addNode(parentNode, currentPos);
-        }
-      );
-      const timeEnd = performance.now();
-
-      setKermitAlgoTime(timeEnd - timeBegin);
-      setKermitNnodes(treeBuilder.getNodeCount());
-      setKermitTree(treeBuilder.getTree());
-
-      if (newPath && newPath.length > 1) {
-        setPath(newPath); // Establece el nuevo path
-        setStepIndex(1); // Inicia desde el primer paso
-      } else {
-        alert(
-          `Kermint no encontró un camino a elmo, revisar la profundidad, ${DEPTH_LIMIT}`
-        );
-      }
+      calculateNewPath();
     }
   }, [
     kermitPosition,
     elmoPosition,
-    path,
-    stepIndex,
     board,
     avoidingLoopsDFS,
+    path.length,
+    stepIndex,
     DEPTH_LIMIT,
+    calculateNewPath,
   ]);
 
-  // muy importante para que cada que cambie el board recalcule el path con el nuevo board
+  // Clear path if board is reset
   useEffect(() => {
-    setPath([]);
-    setStepIndex(0);
-  }, [numberOfCells, wasReset, avoidingLoopsDFS]);
+    resetPathState();
+  }, [numberOfCells, isBoardReset, avoidingLoopsDFS, resetPathState]);
 
   return {
     moveToElmo,
-    kermitTree,
-    kermitNnodes,
+    kermitTree: algoStateVisualization.tree,
+    kermitNnodes: algoStateVisualization.nodeCount,
     kermitPath: path,
-    kermitAlgoTime,
+    kermitAlgoTime: algoStateVisualization.algoTime,
   };
 }
