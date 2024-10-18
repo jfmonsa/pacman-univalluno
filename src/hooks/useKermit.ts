@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { depthLimitedDFS } from "../algos/dfsLimited";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { TreeBuilderRecursive } from "../utils/TreeBuilder";
-import { posToString } from "../utils/posToString";
 
 export function useKermit(
   kermitPosition: positionType,

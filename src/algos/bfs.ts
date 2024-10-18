@@ -1,4 +1,8 @@
-import { isPosInBounds } from "../utils/isPosInBounds";
+import {
+  isNotWall,
+  isPosInBounds,
+  isSamePosition,
+} from "../utils/isPosInBounds";
 import { posToString } from "../utils/posToString";
 import { cellType, positionType } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
@@ -21,7 +25,7 @@ export function bfs(
     const currentPos = path[path.length - 1];
 
     // If Piggy reaches Kermit, returns both the path and the tree
-    if (currentPos.row === goal.row && currentPos.col === goal.col) {
+    if (isSamePosition(currentPos, goal)) {
       return path;
     }
 
@@ -37,7 +41,7 @@ export function bfs(
       if (
         isPosInBounds(nextPos, board) &&
         !visited.has(posToString(nextPos)) &&
-        board[nextPos.row][nextPos.col] !== "wall" // Avoids walls
+        isNotWall(nextPos, board)
       ) {
         visited.add(posToString(nextPos));
 

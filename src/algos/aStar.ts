@@ -1,89 +1,96 @@
-import { isPosInBounds } from "../utils/isPosInBounds";
+import {
+  isNotWall,
+  isPosInBounds,
+  isSamePosition,
+} from "../utils/isPosInBounds";
 import { posToString } from "../utils/posToString";
-import { cellType, positionType, TreeNode } from "../utils/types";
+import { cellType, positionType } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
 
 export function aStar(
   board: cellType[][],
   start: positionType,
   goal: positionType,
-  hasCookieBoost: boolean
-): {
-  path: positionType[] | null;
-  tree: TreeNode;
-  piggyNnodes: number;
-} {
-  const costMultiplier = hasCookieBoost ? 0.5 : 1; // Cost after the cookie boost
-  const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Node list to explore
-  const closedSet = new Set<string>(); // Visited nodes
+  hasCookieBoost: boolean,
+  treeBuilderCallback?: (
+    parentNode: positionType,
+    currentPos: positionType
+  ) => void
+): positionType[] | null {
+  // Cost after the cookie boost
+  const costMultiplier = hasCookieBoost ? 0.5 : 1;
 
+  // Node list to explore
+  const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }];
+
+  // Visited nodes
+  const closedSet = new Set<string>();
+
+  // For reconstructing the path
   const cameFrom: Record<
     string,
     { row: number; col: number; g: number; f: number }
-  > = {}; // For reconstructing the path
-
-  const tree: TreeNode = { data: { v: posToString(start) }, children: [] };
-  let piggyNnodes = 1;
-
-  const nodeMap = new Map<string, TreeNode>();
-  nodeMap.set(posToString(start), tree);
+  > = {};
 
   while (openList.length > 0) {
-    // Sorts the opened nodes list by the value f = (g + heuristic)
+    // Gets the node with the lowest f value
+    //  - Sorts the opened nodes list by the value f = g + h; g = acumulated cost, h = heuristic
+    //  TODO: Implement a priority queue to to improve time complexity from O(n*log n) to O(log n)
     openList.sort((a, b) => a.f - b.f);
-    const current = openList.shift()!; // Gets the node with the lowest f value
+    const currentPos = openList.shift()!;
 
-    // If Piggy reaches Kermit (the goal)
-    if (current.row === goal.row && current.col === goal.col) {
+    // If Piggy reaches Kermit (the goal) -> reconstruct the path
+    if (isSamePosition(currentPos, goal)) {
       const path = [];
-      let pos = current;
+      let pos = currentPos;
       while (posToString(pos) !== posToString(start)) {
         path.push({ row: pos.row, col: pos.col });
         pos = cameFrom[posToString(pos)];
       }
       path.reverse();
-      return { path, tree, piggyNnodes };
+      return path;
     }
 
-    closedSet.add(posToString(current));
+    closedSet.add(posToString(currentPos));
 
     // Explores the directions in the defined order
     for (const dir of operatorsOrder) {
-      const newRow = current.row + dir.row;
-      const newCol = current.col + dir.col;
+      const nextPos = {
+        row: currentPos.row + dir.row,
+        col: currentPos.col + dir.col,
+      };
 
       if (
-        isPosInBounds({ row: newRow, col: newCol }, board) &&
-        !closedSet.has(posToString({ row: newRow, col: newCol })) &&
-        board[newRow][newCol] !== "wall" // Avoids walls
+        isPosInBounds(nextPos, board) &&
+        !closedSet.has(posToString(nextPos)) &&
+        isNotWall(nextPos, board)
       ) {
-        const g = current.g + 1 * costMultiplier;
-        const f = g + manhattanDistance({ row: newRow, col: newCol }, goal);
+        const g = currentPos.g + 1 * costMultiplier;
+        const f = g + manhattanDistance(nextPos, goal);
 
-        const neighbor = { row: newRow, col: newCol, g, f };
+        const neighbor = { ...nextPos, g, f };
 
+        // If the neighbor is not in the open list
         if (
-          !openList.some((node) => node.row === newRow && node.col === newCol)
+          !openList.some(
+            (node) => node.row === nextPos.row && node.col === nextPos.col
+          )
         ) {
+          // Adds the neighbor to the open list
           openList.push(neighbor);
-          cameFrom[posToString(neighbor)] = current;
+          // Adds the neighbor to the cameFrom list
+          cameFrom[posToString(neighbor)] = currentPos;
 
-          const newNode: TreeNode = {
-            data: { v: posToString(neighbor) },
-            children: [],
-          };
-          piggyNnodes++;
-          nodeMap.get(posToString(current))!.children!.push({ node: newNode });
-          nodeMap.set(posToString(neighbor), newNode);
+          // If callback is provided, call it to construct the tree
+          if (treeBuilderCallback) {
+            treeBuilderCallback(currentPos, neighbor);
+          }
         }
       }
     }
   }
-  return {
-    path: null,
-    tree,
-    piggyNnodes,
-  }; // If there is no path
+  // If there is no path
+  return null;
 }
 
 function manhattanDistance(pos1: positionType, pos2: positionType): number {

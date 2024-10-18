@@ -1,4 +1,8 @@
-import { isPosInBounds } from "../utils/isPosInBounds";
+import {
+  isNotWall,
+  isPosInBounds,
+  isSamePosition,
+} from "../utils/isPosInBounds";
 import { posToString } from "../utils/posToString";
 import { cellType, positionType } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
@@ -20,7 +24,7 @@ export function depthLimitedDFS(
   ): positionType[] | null {
     // Base case
     if (depth > depthLimit) return null;
-    if (current.row === goal.row && current.col === goal.col) return [current];
+    if (isSamePosition(current, goal)) return [current];
 
     if (avoidingLoopsDFS) {
       visited.add(posToString(current));
@@ -36,7 +40,7 @@ export function depthLimitedDFS(
       if (
         isPosInBounds(nextPos, board) &&
         (!avoidingLoopsDFS || !visited.has(posToString(nextPos))) &&
-        board[nextPos.row][nextPos.col] !== "wall"
+        isNotWall(nextPos, board)
       ) {
         let nextParentNode = parentNode;
 

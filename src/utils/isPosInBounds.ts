@@ -9,3 +9,11 @@ export const isPosInBounds = (pos: positionType, board: cellType[][]) => {
     pos.col < board[0].length
   );
 };
+
+export const isSamePosition = (pos1: positionType, pos2: positionType) => {
+  return pos1.row === pos2.row && pos1.col === pos2.col;
+};
+
+export const isNotWall = (pos: positionType, board: cellType[][]) => {
+  return board[pos.row][pos.col] !== "wall";
+};

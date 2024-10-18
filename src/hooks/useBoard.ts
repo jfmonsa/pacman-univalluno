@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cellType, positionType } from "../utils/types";
+import { isSamePosition } from "../utils/isPosInBounds";
 
 export function useBoard(
   board: cellType[][],
@@ -30,32 +31,21 @@ export function useBoard(
     newBoard[elmoPosition.row][elmoPosition.col] = "elmo";
     setBoard(newBoard);
 
-    // endGame
-    // Checks if Kermit and Piggy are in the same position
-    const isKermitAndPiggyInSamePosition =
-      kermitPosition.row === piggyPosition.row &&
-      kermitPosition.col === piggyPosition.col;
-
-    const isKermitAndElmoInSamePosition =
-      kermitPosition.row === elmoPosition.row &&
-      kermitPosition.col === elmoPosition.col;
-
-    if (isKermitAndPiggyInSamePosition) {
-      onGameEnd("Piggy ha atrapado a Kermit");
-    }
-
-    // Checks if Kermit and Elmo are in the same position
-    if (isKermitAndElmoInSamePosition) {
+    // endGame cases:
+    // 1. Checks if Kermit and Elmo are in the same position
+    if (isSamePosition(kermitPosition, elmoPosition)) {
       onGameEnd("Kermit ha atrapado a Elmo");
     }
 
-    // Edge case check:
-    // Checks if Kermit and Piggy have crossed paths
+    // 2. Checks if Kermit and Piggy are in the same position
+    if (isSamePosition(piggyPosition, elmoPosition)) {
+      onGameEnd("Piggy ha atrapado a Kermit");
+    }
+
+    // 3. Edge case: Checks if Kermit and Piggy have crossed paths
     if (
-      kermitPosition.row === piggyPrevPosition.row &&
-      kermitPosition.col === piggyPrevPosition.col &&
-      kermitPrevPosition.row === piggyPosition.row &&
-      kermitPrevPosition.col === piggyPosition.col
+      isSamePosition(kermitPosition, piggyPrevPosition) &&
+      isSamePosition(kermitPrevPosition, piggyPosition)
     ) {
       onGameEnd("Kermit se ha cruzado de frente con Piggy");
     }

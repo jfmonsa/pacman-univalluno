@@ -40,18 +40,22 @@ export function usePiggy(
   const moveToKermit = () => {
     if (useAStar) {
       const timeBegin = performance.now();
+      const treeBuilder = new TreeBuilderIterative(piggyPosition);
 
-      const { path, tree, piggyNnodes } = aStar(
+      const path = aStar(
         board,
         piggyPosition,
         kermitPosition,
-        hasCookieBoost
+        hasCookieBoost,
+        (parentNode, currentPos) => {
+          treeBuilder.addNode(parentNode, currentPos);
+        }
       );
       const timeEnd = performance.now();
 
       setAlgoStateVisualization({
-        tree,
-        nodeCount: piggyNnodes,
+        tree: treeBuilder.getTree(),
+        nodeCount: treeBuilder.getNodeCount(),
         algoTime: timeEnd - timeBegin,
       });
 
