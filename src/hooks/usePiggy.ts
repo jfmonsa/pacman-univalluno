@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { aStar } from "../algos/aStar";
 import { bfs } from "../algos/bfs";
+import { TreeBuilderIterative } from "../utils/TreeBuilder";
 
 export function usePiggy(
   piggyPosition: positionType,
@@ -27,6 +28,7 @@ export function usePiggy(
   }, [piggyPosition, board]);
 
   useEffect(() => {
+    // 40% chance of using A* algorithm
     const chance = Math.random();
     if (chance < 0.4) {
       setUseAStar(true);
@@ -61,15 +63,19 @@ export function usePiggy(
       }
     } else {
       const timeBegin = performance.now();
-      const { path, tree, piggyNnodes } = bfs(
+      const treeBuilder = new TreeBuilderIterative(piggyPosition);
+      const path = bfs(
         board,
         piggyPosition,
-        kermitPosition
+        kermitPosition,
+        (parentNode, currentPos) => {
+          treeBuilder.addNode(parentNode, currentPos);
+        }
       );
       const timeEnd = performance.now();
       setAlgoStateVisualization({
-        tree,
-        nodeCount: piggyNnodes,
+        tree: treeBuilder.getTree(),
+        nodeCount: treeBuilder.getNodeCount(),
         algoTime: timeEnd - timeBegin,
       });
 

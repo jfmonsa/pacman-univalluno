@@ -1,3 +1,4 @@
+import { isPosInBounds } from "../utils/isPosInBounds";
 import { posToString } from "../utils/posToString";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
@@ -51,15 +52,8 @@ export function aStar(
       const newRow = current.row + dir.row;
       const newCol = current.col + dir.col;
 
-      // Checks if the new position is within the board and is not an obstacle
-      const isInBounds =
-        newRow >= 0 &&
-        newRow < board.length &&
-        newCol >= 0 &&
-        newCol < board[0].length;
-
       if (
-        isInBounds &&
+        isPosInBounds({ row: newRow, col: newCol }, board) &&
         !closedSet.has(posToString({ row: newRow, col: newCol })) &&
         board[newRow][newCol] !== "wall" // Avoids walls
       ) {

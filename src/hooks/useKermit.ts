@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { depthLimitedDFS } from "../algos/dfsLimited";
 import { cellType, positionType, TreeNode } from "../utils/types";
-import { TreeBuilder } from "../utils/TreeBuilder";
+import { TreeBuilderRecursive } from "../utils/TreeBuilder";
 import { posToString } from "../utils/posToString";
 
 export function useKermit(
@@ -26,7 +26,7 @@ export function useKermit(
 
   const calculateNewPath = useCallback(() => {
     const start = kermitPosition;
-    const treeBuilder = new TreeBuilder(posToString(start));
+    const treeBuilder = new TreeBuilderRecursive(start);
 
     const timeBegin = performance.now();
     const newPath = depthLimitedDFS(

@@ -22,7 +22,9 @@ export function depthLimitedDFS(
     if (depth > depthLimit) return null;
     if (current.row === goal.row && current.col === goal.col) return [current];
 
-    visited.add(posToString(current));
+    if (avoidingLoopsDFS) {
+      visited.add(posToString(current));
+    }
 
     // Recusive cases
     for (const move of operatorsOrder) {
