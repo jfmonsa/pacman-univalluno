@@ -39,7 +39,7 @@ export default function AlgoVisualization({
 }: AlogVisualizationProps) {
   return (
     <div>
-      <h2>Visualization: Kermit a Elmo</h2>
+      <h2>Visualización: Kermit a Elmo</h2>
       <ul>
         <li>Algoritmo: {kermitStrategy}</li>
         <li>Nodos: {kermitNnodes}</li>
@@ -66,7 +66,7 @@ export default function AlgoVisualization({
         />
       )}
 
-      <h2>Visualization: Piggy a Kermit</h2>
+      <h2>Visualización: Piggy a Kermit</h2>
       <ul>
         <li>Algoritmo: {piggyStrategy}</li>
         <li>Nodos: {piggyNnodes}</li>

@@ -129,7 +129,7 @@ function Game() {
             kermitPath,
             kermitAlgoTime,
             kermitPosition,
-            kermitStrategy: `DFS ${
+            kermitStrategy: `DFS (Depth Limited) ${
               avoidingLoopsDFS ? "Evitando ciclos" : "Sin evitar ciclos"
             }`,
             piggyTree,
