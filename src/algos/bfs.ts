@@ -1,3 +1,5 @@
+import { isPosInBounds } from "../utils/isPosInBounds";
+import { posToString } from "../utils/posToString";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
 
@@ -9,15 +11,12 @@ export function bfs(
   path: positionType[] | null;
   tree: TreeNode;
   piggyNnodes: number;
-  piggyAlgoTime: number;
 } {
   const queue = [[start]]; // The queue stores full paths
   const visited = new Set([`${start.row},${start.col}`]);
 
   const tree: TreeNode = { data: { v: posToString(start) }, children: [] };
   let piggyNnodes = 1;
-
-  const beginTime = Date.now();
 
   const nodeMap = new Map<string, TreeNode>();
   nodeMap.set(`${start.row},${start.col}`, tree);
@@ -29,7 +28,7 @@ export function bfs(
 
     // If Piggy reaches Kermit, returns both the path and the tree
     if (row === goal.row && col === goal.col) {
-      return { path, tree, piggyNnodes, piggyAlgoTime: Date.now() - beginTime };
+      return { path, tree, piggyNnodes };
     }
 
     // Explores the directions in the defined order
@@ -37,12 +36,9 @@ export function bfs(
       const newRow = row + dir.row;
       const newCol = col + dir.col;
 
-      // Checks if the new position is within the board and is not an obstacle 
+      // Checks if the new position is within the board and is not an obstacle
       if (
-        newRow >= 0 &&
-        newRow < board.length && // Row limits
-        newCol >= 0 &&
-        newCol < board[0].length && // Column limits
+        isPosInBounds({ row: newRow, col: newCol }, board) &&
         !visited.has(`${newRow},${newCol}`) &&
         board[newRow][newCol] !== "wall" // Avoids walls
       ) {
@@ -59,14 +55,10 @@ export function bfs(
     }
   }
 
+  // If there is no path
   return {
     path: null,
     tree,
     piggyNnodes,
-    piggyAlgoTime: Date.now() - beginTime,
-  }; // If there is no path
-}
-
-function posToString(pos: positionType): string {
-  return `${pos.row},${pos.col}`;
+  };
 }

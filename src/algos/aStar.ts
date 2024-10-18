@@ -1,3 +1,4 @@
+import { posToString } from "../utils/posToString";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";
 
@@ -10,7 +11,6 @@ export function aStar(
   path: positionType[] | null;
   tree: TreeNode;
   piggyNnodes: number;
-  piggyAlgoTime: number;
 } {
   const costMultiplier = hasCookieBoost ? 0.5 : 1; // Cost after the cookie boost
   const openList = [{ ...start, g: 0, f: manhattanDistance(start, goal) }]; // Node list to explore
@@ -21,14 +21,11 @@ export function aStar(
     { row: number; col: number; g: number; f: number }
   > = {}; // For reconstructing the path
 
-  const key = (pos: { row: number; col: number }) => `${pos.row},${pos.col}`; // Unique key for each node
-
-  const tree: TreeNode = { data: { v: key(start) }, children: [] };
+  const tree: TreeNode = { data: { v: posToString(start) }, children: [] };
   let piggyNnodes = 1;
-  const beginTime = Date.now();
 
   const nodeMap = new Map<string, TreeNode>();
-  nodeMap.set(key(start), tree);
+  nodeMap.set(posToString(start), tree);
 
   while (openList.length > 0) {
     // Sorts the opened nodes list by the value f = (g + heuristic)
@@ -39,15 +36,15 @@ export function aStar(
     if (current.row === goal.row && current.col === goal.col) {
       const path = [];
       let pos = current;
-      while (key(pos) !== key(start)) {
+      while (posToString(pos) !== posToString(start)) {
         path.push({ row: pos.row, col: pos.col });
-        pos = cameFrom[key(pos)];
+        pos = cameFrom[posToString(pos)];
       }
       path.reverse();
-      return { path, tree, piggyNnodes, piggyAlgoTime: Date.now() - beginTime };
+      return { path, tree, piggyNnodes };
     }
 
-    closedSet.add(key(current));
+    closedSet.add(posToString(current));
 
     // Explores the directions in the defined order
     for (const dir of operatorsOrder) {
@@ -63,7 +60,7 @@ export function aStar(
 
       if (
         isInBounds &&
-        !closedSet.has(key({ row: newRow, col: newCol })) &&
+        !closedSet.has(posToString({ row: newRow, col: newCol })) &&
         board[newRow][newCol] !== "wall" // Avoids walls
       ) {
         const g = current.g + 1 * costMultiplier;
@@ -75,15 +72,15 @@ export function aStar(
           !openList.some((node) => node.row === newRow && node.col === newCol)
         ) {
           openList.push(neighbor);
-          cameFrom[key(neighbor)] = current;
+          cameFrom[posToString(neighbor)] = current;
 
           const newNode: TreeNode = {
-            data: { v: key(neighbor) },
+            data: { v: posToString(neighbor) },
             children: [],
           };
           piggyNnodes++;
-          nodeMap.get(key(current))!.children!.push({ node: newNode });
-          nodeMap.set(key(neighbor), newNode);
+          nodeMap.get(posToString(current))!.children!.push({ node: newNode });
+          nodeMap.set(posToString(neighbor), newNode);
         }
       }
     }
@@ -92,7 +89,6 @@ export function aStar(
     path: null,
     tree,
     piggyNnodes,
-    piggyAlgoTime: Date.now() - beginTime,
   }; // If there is no path
 }
 

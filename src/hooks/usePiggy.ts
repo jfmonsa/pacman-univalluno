@@ -13,9 +13,11 @@ export function usePiggy(
   const [hasCookieBoost, setHasCookieBoost] = useState(false);
   const [piggyPath, setPiggyPath] = useState<positionType[]>([]);
   // Tree for algorithm visualization
-  const [piggyTree, setPiggyTree] = useState<TreeNode | null>(null);
-  const [piggyNnodes, setPiggyNnodes] = useState(0);
-  const [piggyAlgoTime, setPiggyAlgoTime] = useState(0);
+  const [algoStateVisualization, setAlgoStateVisualization] = useState({
+    tree: null as TreeNode | null,
+    nodeCount: 0,
+    algoTime: 0,
+  });
 
   useEffect(() => {
     // Checks if Piggy is in the same position as the cookie
@@ -35,16 +37,21 @@ export function usePiggy(
 
   const moveToKermit = () => {
     if (useAStar) {
-      const { path, tree, piggyNnodes, piggyAlgoTime } = aStar(
+      const timeBegin = performance.now();
+
+      const { path, tree, piggyNnodes } = aStar(
         board,
         piggyPosition,
         kermitPosition,
         hasCookieBoost
       );
+      const timeEnd = performance.now();
 
-      setPiggyTree(tree);
-      setPiggyNnodes(piggyNnodes);
-      setPiggyAlgoTime(piggyAlgoTime);
+      setAlgoStateVisualization({
+        tree,
+        nodeCount: piggyNnodes,
+        algoTime: timeEnd - timeBegin,
+      });
 
       if (path && path.length > 0) {
         setPiggyPath(path);
@@ -53,14 +60,18 @@ export function usePiggy(
         console.warn("No se encontró un camino hacia Kermit con A*.");
       }
     } else {
-      const { path, tree, piggyNnodes, piggyAlgoTime } = bfs(
+      const timeBegin = performance.now();
+      const { path, tree, piggyNnodes } = bfs(
         board,
         piggyPosition,
         kermitPosition
       );
-      setPiggyAlgoTime(piggyAlgoTime);
-      setPiggyTree(tree);
-      setPiggyNnodes(piggyNnodes);
+      const timeEnd = performance.now();
+      setAlgoStateVisualization({
+        tree,
+        nodeCount: piggyNnodes,
+        algoTime: timeEnd - timeBegin,
+      });
 
       if (path && path.length > 1) {
         setPiggyPosition(path[1]);
@@ -74,10 +85,10 @@ export function usePiggy(
   return {
     kermitPosition,
     moveToKermit,
-    piggyTree,
     piggyPath,
     useAStar,
-    piggyNnodes,
-    piggyAlgoTime,
+    piggyTree: algoStateVisualization.tree,
+    piggyNnodes: algoStateVisualization.nodeCount,
+    piggyAlgoTime: algoStateVisualization.algoTime,
   };
 }
