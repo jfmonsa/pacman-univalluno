@@ -9,7 +9,7 @@ export default function Board({ board }: { board: cellType[][] }) {
           {row.map((cell: cellType, colIndex: number) => (
             <div key={colIndex} className={`${styles.cell} ${styles[cell]}`}>
               {cell !== "empty" && cell !== "wall" && (
-                <img src={`src/assets/${cell}.svg`} alt={cell} />
+                <img src={`/assets/${cell}.svg`} alt={cell} />
               )}
             </div>
           ))}
