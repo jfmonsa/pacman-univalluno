@@ -2,7 +2,7 @@ import {
   isNotWall,
   isPosInBounds,
   isSamePosition,
-} from "../utils/isPosInBounds";
+} from "../utils/positionsAux";
 import { posToString } from "../utils/posToString";
 import { cellType, positionType } from "../utils/types";
 import { operatorsOrder } from "./operatorsOrderConst";

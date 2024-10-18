@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { cellType, positionType } from "../utils/types";
-import { isSamePosition } from "../utils/isPosInBounds";
+import { isSamePosition } from "../utils/positionsAux";
 
 export function useBoard(
   board: cellType[][],

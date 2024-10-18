@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { cellType, positionType, TreeNode } from "../utils/types";
 import { aStar } from "../algos/aStar";
 import { bfs } from "../algos/bfs";
@@ -20,15 +20,15 @@ export function usePiggy(
     algoTime: 0,
   });
 
+  // Checks if Piggy is in the same position as the cookie
   useEffect(() => {
-    // Checks if Piggy is in the same position as the cookie
     if (board[piggyPosition.row][piggyPosition.col] === "cookie") {
       setHasCookieBoost(true);
     }
   }, [piggyPosition, board]);
 
+  // 40% chance of using A* algorithm
   useEffect(() => {
-    // 40% chance of using A* algorithm
     const chance = Math.random();
     if (chance < 0.4) {
       setUseAStar(true);
@@ -37,60 +37,55 @@ export function usePiggy(
     }
   }, [piggyPosition, kermitPosition]);
 
-  const moveToKermit = () => {
-    if (useAStar) {
-      const timeBegin = performance.now();
-      const treeBuilder = new TreeBuilderIterative(piggyPosition);
+  const moveToKermit = useCallback(() => {
+    const treeBuilder = new TreeBuilderIterative(piggyPosition);
 
-      const path = aStar(
-        board,
-        piggyPosition,
-        kermitPosition,
-        hasCookieBoost,
-        (parentNode, currentPos) => {
-          treeBuilder.addNode(parentNode, currentPos);
-        }
-      );
-      const timeEnd = performance.now();
+    const addNodeCallback = (
+      parentNode: positionType,
+      currentPos: positionType
+    ) => {
+      treeBuilder.addNode(parentNode, currentPos);
+    };
 
-      setAlgoStateVisualization({
-        tree: treeBuilder.getTree(),
-        nodeCount: treeBuilder.getNodeCount(),
-        algoTime: timeEnd - timeBegin,
-      });
+    const timeBegin = performance.now();
 
-      if (path && path.length > 0) {
-        setPiggyPath(path);
-        setPiggyPosition(path[0]); // Moves Piggy to the next position in the path
-      } else {
-        console.warn("No se encontró un camino hacia Kermit con A*.");
-      }
+    const path = useAStar
+      ? aStar(
+          board,
+          piggyPosition,
+          kermitPosition,
+          hasCookieBoost,
+          addNodeCallback
+        )
+      : bfs(board, piggyPosition, kermitPosition, addNodeCallback);
+
+    const timeEnd = performance.now();
+
+    setAlgoStateVisualization({
+      tree: treeBuilder.getTree(),
+      nodeCount: treeBuilder.getNodeCount(),
+      algoTime: timeEnd - timeBegin,
+    });
+
+    if (useAStar && path && path.length > 0) {
+      setPiggyPath(path);
+      setPiggyPosition(path[0]);
+    } else if (!useAStar && path && path.length > 1) {
+      setPiggyPosition(path[1]);
+      setPiggyPath(path);
     } else {
-      const timeBegin = performance.now();
-      const treeBuilder = new TreeBuilderIterative(piggyPosition);
-      const path = bfs(
-        board,
-        piggyPosition,
-        kermitPosition,
-        (parentNode, currentPos) => {
-          treeBuilder.addNode(parentNode, currentPos);
-        }
+      console.warn(
+        `No se encontró un camino hacia Kermit, con: ${useAStar ? "A*" : "BFS"}`
       );
-      const timeEnd = performance.now();
-      setAlgoStateVisualization({
-        tree: treeBuilder.getTree(),
-        nodeCount: treeBuilder.getNodeCount(),
-        algoTime: timeEnd - timeBegin,
-      });
-
-      if (path && path.length > 1) {
-        setPiggyPosition(path[1]);
-        setPiggyPath(path);
-      } else {
-        console.warn("No se encontró un camino hacia Kermit con Amplitud.");
-      }
     }
-  };
+  }, [
+    useAStar,
+    board,
+    piggyPosition,
+    kermitPosition,
+    hasCookieBoost,
+    setPiggyPosition,
+  ]);
 
   return {
     kermitPosition,
