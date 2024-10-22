@@ -27,5 +27,5 @@ Dive into this project to explore the fascinating world of pathfinding algorithm
 ## Authors
 
 - Nicolás Prado León [@NicolasPL64](https://github.com/NicolasPL64) - 2160073
-- Leider Santiago Cortés [LeiderSantiagoCortes](https://github.com/LeiderSantiagoCortes) - 202159879
+- Leider Santiago Cortes Hernandez [LeiderSantiagoCortes](https://github.com/LeiderSantiagoCortes) - 202159879
 - Juan Felipe Monsalve Vargas [@jfmonsa](https://github.com/jfmonsa) - 2160145
