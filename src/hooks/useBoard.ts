@@ -38,7 +38,7 @@ export function useBoard(
     }
 
     // 2. Checks if Kermit and Piggy are in the same position
-    if (isSamePosition(piggyPosition, elmoPosition)) {
+    if (isSamePosition(piggyPosition, kermitPosition)) {
       onGameEnd("Piggy ha atrapado a Kermit");
     }
 
